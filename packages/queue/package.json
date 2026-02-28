@@ -1,0 +1,86 @@
+{
+  "name": "@cortex/queue",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Job queue abstraction - BullMQ and database-backed modes with zero-dependency core",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./core": {
+      "development": "./src/core/index.ts",
+      "types": "./src/core/index.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./driver-db": {
+      "development": "./src/driver-db/index.ts",
+      "types": "./src/driver-db/index.ts",
+      "default": "./dist/driver-db/index.js"
+    },
+    "./driver-bullmq": {
+      "development": "./src/driver-bullmq/index.ts",
+      "types": "./src/driver-bullmq/index.ts",
+      "default": "./dist/driver-bullmq/index.js"
+    },
+    "./transport-http": {
+      "development": "./src/transport-http/index.ts",
+      "types": "./src/transport-http/index.ts",
+      "default": "./dist/transport-http/index.js"
+    },
+    "./app": {
+      "development": "./src/app/index.ts",
+      "types": "./src/app/index.ts",
+      "default": "./dist/app/index.js"
+    },
+    "./driver-db/schema/sqlite": {
+      "development": "./src/driver-db/schema/sqlite.ts",
+      "types": "./src/driver-db/schema/sqlite.ts",
+      "default": "./dist/driver-db/schema/sqlite.js"
+    },
+    "./driver-db/schema/postgres": {
+      "development": "./src/driver-db/schema/postgres.ts",
+      "types": "./src/driver-db/schema/postgres.ts",
+      "default": "./dist/driver-db/schema/postgres.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:sqlite": "DB_TYPE=sqlite vitest run",
+    "test:pglite": "DB_TYPE=pglite vitest run",
+    "test:bullmq": "QUEUE_DRIVER=bullmq vitest run",
+    "test:all": "pnpm test:sqlite && pnpm test:pglite && pnpm test:bullmq"
+  },
+  "dependencies": {
+    "@cortex/core": "workspace:*",
+    "@cortex/db": "workspace:*",
+    "@cortex/logger": "workspace:*",
+    "bullmq": "5.70.1",
+    "cron-parser": "5.5.0",
+    "ioredis": "5.9.3",
+    "axios": "1.13.5",
+    "drizzle-orm": "0.45.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "24.10.4",
+    "better-sqlite3": "12.6.2",
+    "drizzle-kit": "0.31.8",
+    "postgres": "3.4.8",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
+  }
+}

@@ -1,0 +1,143 @@
+/**
+ * PostgreSQL/PGlite Transaction Adapter
+ *
+ * Implements the TransactionManager interface for both PostgreSQL and PGlite.
+ * Both databases use the same Drizzle transaction API, so a single implementation works for both.
+ *
+ * Uses native async transactions directly - no operation queuing needed.
+ * Supports full Read-Modify-Write patterns inside transactions.
+ */
+
+import { generateTagId } from "@cortex/core/id";
+import { and, eq, inArray, type SQL } from "drizzle-orm";
+import type { PgliteDatabase } from "drizzle-orm/pglite";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import * as schemaModule from "../../schema/postgres.js";
+import type { BaseRepository, TransactionManager, Tx } from "../../types.js";
+
+// Plain object copy for safe dynamic property access (avoids namespace import indexing)
+const schema = { ...schemaModule };
+
+// Union type for both PostgreSQL and PGlite databases
+type PgDatabase =
+  | PostgresJsDatabase<typeof schemaModule>
+  | PgliteDatabase<typeof schemaModule>;
+
+// Extract the transaction type - both extend PgTransaction so this works for both
+type DrizzlePgTx = Parameters<Parameters<PgDatabase["transaction"]>[0]>[0];
+
+/**
+ * Wraps a Drizzle PostgreSQL/PGlite transaction to provide the Tx interface.
+ * All operations execute directly and async - no queuing.
+ */
+function wrapPgTx(drizzleTx: DrizzlePgTx): Tx {
+  // Helper to create a repository for a given table
+  function createRepository<TTable extends keyof typeof schemaModule>(
+    tableName: TTable,
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic table repository — types resolved at runtime
+  ): BaseRepository<any, any, any> {
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic table lookup from schema
+    const table = schema[tableName] as any;
+
+    return {
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic insert values
+      async insert(values: any): Promise<void> {
+        await drizzleTx.insert(table).values(values);
+      },
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic update values
+      async update(where: SQL | undefined, values: any): Promise<void> {
+        if (!where) return;
+        await drizzleTx.update(table).set(values).where(where);
+      },
+      async delete(where: SQL | undefined): Promise<void> {
+        if (!where) return;
+        await drizzleTx.delete(table).where(where);
+      },
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic select return type
+      async findFirst(where: SQL | undefined): Promise<any | undefined> {
+        const baseQuery = drizzleTx.select().from(table);
+        const results = where
+          ? await baseQuery.where(where).limit(1)
+          : await baseQuery.limit(1);
+        return results[0];
+      },
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic select return type
+      async findMany(where: SQL | undefined): Promise<any[]> {
+        const baseQuery = drizzleTx.select().from(table);
+        return where ? await baseQuery.where(where) : await baseQuery;
+      },
+    };
+  }
+
+  return {
+    users: createRepository("users"),
+    bookmarks: createRepository("bookmarks"),
+    bookmarksTags: createRepository("bookmarksTags"),
+    tasks: createRepository("tasks"),
+    tasksTags: createRepository("tasksTags"),
+    documents: createRepository("documents"),
+    documentsTags: createRepository("documentsTags"),
+    photos: createRepository("photos"),
+    photosTags: createRepository("photosTags"),
+    notes: createRepository("notes"),
+    notesTags: createRepository("notesTags"),
+    tags: createRepository("tags"),
+    history: createRepository("history"),
+    conversations: createRepository("conversations"),
+    messages: createRepository("messages"),
+    channels: createRepository("channels"),
+    feedback: createRepository("feedback"),
+
+    async getOrCreateTags(
+      tagNames: string[],
+      userId: string,
+    ): Promise<{ id: string; name: string }[]> {
+      if (!tagNames || tagNames.length === 0) return [];
+
+      const uniqueNames = [
+        ...new Set(
+          tagNames.map((name) => name.trim().toLowerCase()).filter(Boolean),
+        ),
+      ];
+      if (uniqueNames.length === 0) return [];
+
+      // Atomic upsert: insert all tags, ignore conflicts on (userId, name)
+      await drizzleTx
+        .insert(schema.tags)
+        .values(
+          uniqueNames.map((name) => ({
+            id: generateTagId(),
+            name,
+            userId,
+          })),
+        )
+        .onConflictDoNothing();
+
+      // Fetch all matching tags
+      return drizzleTx
+        .select({ id: schema.tags.id, name: schema.tags.name })
+        .from(schema.tags)
+        .where(
+          and(
+            eq(schema.tags.userId, userId),
+            inArray(schema.tags.name, uniqueNames),
+          ),
+        );
+    },
+  };
+}
+
+/**
+ * Creates a PostgreSQL/PGlite TransactionManager
+ * Works with both PostgreSQL and PGlite as they share the same transaction API.
+ */
+export function createPgTransactionManager(db: PgDatabase): TransactionManager {
+  return {
+    async withTransaction<T>(fn: (tx: Tx) => Promise<T>): Promise<T> {
+      return db.transaction(async (drizzleTx) => {
+        const tx = wrapPgTx(drizzleTx);
+        return await fn(tx);
+      });
+    },
+  };
+}

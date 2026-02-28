@@ -1,0 +1,374 @@
+/* ———————————————————————————————————————————
+   imports FIRST (per CSS spec)
+——————————————————————————————————————————— */
+@import url("highlight.js/styles/github.css") layer(base)
+  (prefers-color-scheme: light);
+@import url("highlight.js/styles/github-dark.css") layer(base)
+  (prefers-color-scheme: dark);
+
+/* tailwind layers */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* plugins */
+@plugin '@tailwindcss/typography';
+
+/* dark mode (class-based) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* theme extensions */
+@theme {
+  /* Colors */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  /* Border radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-spin-slow: spin-slow 20s linear infinite;
+  --animate-spin-reverse-slow: spin-reverse-slow 25s linear infinite;
+}
+
+/* Custom keyframes */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse-slow {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+@utility line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+@utility line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+@utility line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+@utility safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+@utility safe-area-pt {
+  padding-top: env(safe-area-inset-top, 0);
+}
+@utility mobile-viewport {
+  height: 100vh;
+  height: 100dvh;
+}
+@utility text-brand-on-dark {
+  /* Brand text that should remain readable on dark UIs */
+  color: hsl(var(--brand-on-dark));
+}
+
+@layer utilities {
+  /* base font */
+  body {
+    font-family: var(--font-family-base, "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  }
+
+  /* utilities you already had */
+}
+
+@layer base {
+  :root {
+    /* Brand identity center: #7141F0 (HSL ≈ 257 85% 60%) */
+    --brand: 257 85% 60%;
+
+    /* Brand ramp (tints/shades) — includes the deeper primary surface (#6138CE) */
+    --brand-50: 257 100% 97%;
+    --brand-100: 257 95% 92%;
+    --brand-200: 257 90% 85%;
+    --brand-300: 257 88% 76%;
+    --brand-400: 257 86% 68%;
+    --brand-500: var(--brand); /* #7141F0 */
+    --brand-600: 256 61% 51%; /* #6138CE → AAA with white */
+    --brand-700: 256 60% 44%;
+    --brand-800: 256 55% 36%;
+    --brand-900: 256 50% 28%;
+    --brand-950: 256 45% 20%;
+
+    /* Font System - Inter scale */
+    --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-size-xs: 0.688rem;   /* 11px */
+    --font-size-sm: 0.750rem;   /* 12px */
+    --font-size-md: 0.875rem;   /* 14px */
+    --font-size-base: 0.938rem; /* 15px */
+    --font-size-lg: 1rem;       /* 16px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 2rem;      /* 32px */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Accent family options (keep your toggles) */
+    --accent-lavender: var(--brand-300);
+    --accent-teal: 176 48% 44%; /* #3BA7A0 */
+    --accent-gold: 37 91% 55%; /* #F5A623 */
+
+    /* Neutrals & surfaces (light) */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    /* Primary = deep brand surface for buttons/CTAs */
+    --primary: var(--brand-600); /* #6138CE */
+    --primary-foreground: 0 0% 98%; /* white text on primary */
+    --ring: 0 0% 50%; /* neutral gray ring */
+
+    /* Background accent for hover states - neutral */
+    --accent: 0 0% 94%; /* #f0f0f0 - neutral light gray */
+    --accent-foreground: 0 0% 9%;
+
+    /* Neutral containers / support */
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --muted-foreground-strong: 0 0% 40%; /* #666 - 5.5:1 contrast for better readability */
+    --accent-foreground-strong: 0 0% 3.9%;
+
+    /* Brand-tinted hover background (more noticeable than gray) */
+    --hover-bg: 0 0% 94%; /* #f0f0f0 - neutral gray */
+
+    /* System */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+
+    /* Charts – brand-first */
+    --chart-1: var(--brand-500); /* #7141F0 */
+    --chart-2: 257 85% 72%; /* #9C7AF4 */
+    --chart-3: 256 61% 51%; /* #6138CE */
+    --chart-4: 330 70% 60%; /* magenta/pink */
+    --chart-5: 0 75% 55%; /* red */
+
+    --radius: 0.5rem;
+
+    /* Sidebar (light) */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 0 0% 15%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 0 0% 15%;
+
+    /* Sidebar active states */
+    --sidebar-active-bg: 0 0% 0%;
+    --sidebar-active-bg-opacity: 8%;
+    --sidebar-active-text: 0 0% 10%;
+  }
+
+  /* dark mode — Absolute black + pure white */
+  .dark {
+    /* Keep brand consistent; choose a lighter on-dark text tint */
+    --brand: 257 85% 60%; /* #7141F0 */
+
+    /* Lighter brand for on-dark text */
+    --brand-on-dark: 256 86% 70%; /* #9470F4 */
+
+    /* Neutrals & surfaces (absolute black) */
+    --background: 0 0% 0%; /* #000000 - absolute black */
+    --foreground: 0 0% 98%; /* #fafafa - pure white */
+    --card: 0 0% 8%; /* #141414 */
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Primary = deep brand surface for buttons/CTAs (still AAA with white) */
+    --primary: var(--brand-600); /* #6138CE */
+    --primary-foreground: 0 0% 100%;
+    --ring: 0 0% 50%; /* neutral gray ring */
+
+    /* Background accent for hover states - neutral */
+    --accent: 0 0% 18%; /* #2e2e2e - neutral dark gray */
+    --accent-foreground: 0 0% 100%;
+
+    /* Neutral containers in dark */
+    --secondary: 0 0% 12%; /* #1f1f1f */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%; /* #a6a6a6 */
+    --muted-foreground-strong: 0 0% 70%;
+
+    /* Hover background */
+    --hover-bg: 0 0% 15%; /* #262626 */
+
+    /* System */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 4% 21%; /* #373530 */
+    --input: 0 0% 15%;
+
+    /* Charts – brand-first */
+    --chart-1: var(--brand-500); /* #7141F0 */
+    --chart-2: 257 85% 72%; /* #9C7AF4 */
+    --chart-3: 256 61% 51%; /* #6138CE */
+    --chart-4: 330 70% 60%;
+    --chart-5: 0 75% 55%;
+
+    /* Sidebar (absolute black with pure white text) */
+    --sidebar-background: 0 0% 5%; /* #0d0d0d - near black */
+    --sidebar-foreground: 0 0% 100%; /* #ffffff - pure white */
+    --sidebar-primary: var(--brand-400);
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 12%; /* #1f1f1f */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 12%;
+    --sidebar-ring: var(--brand-500);
+
+    /* Sidebar active state colors - Notion-style neutral (no purple) */
+    --sidebar-active-bg: 0 0% 100%;
+    --sidebar-active-bg-opacity: 10%;
+    --sidebar-active-text: 0 0% 100%;
+  }
+}
+
+/* apply base tokens */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* optional: quick theme toggles for the "secondary brand" (accent) */
+.theme-lavender {
+  --accent: var(--accent-lavender);
+}
+.theme-teal {
+  --accent: var(--accent-teal);
+}
+.theme-gold {
+  --accent: var(--accent-gold);
+}
+
+/* Assistant Overlay Animations (kept from your original) */
+@keyframes ripple-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+@keyframes float-up {
+  0% {
+    bottom: 10px;
+    opacity: 0;
+    transform: translateX(0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(5px) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(-5px) scale(1);
+  }
+  100% {
+    bottom: 60px;
+    opacity: 0;
+    transform: translateX(0) scale(0.5);
+  }
+}
+@keyframes gentle-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}

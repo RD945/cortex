@@ -1,0 +1,26 @@
+{
+  "name": "Cortex",
+  "short_name": "Cortex",
+  "description": "Open-source, local-first AI assistant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#191919",
+  "theme_color": "#191919",
+  "icons": [
+    {
+      "src": "/favicon-64x64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "name": "@cortex/monorepo",
+  "version": "0.6.2",
+  "private": true,
+  "packageManager": "pnpm@10.30.2",
+  "license": "MIT",
+  "description": "Cortex - AI-powered productivity platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclaire-labs/eclaire.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eclaire-labs/eclaire/issues"
+  },
+  "homepage": "https://eclaire.co/",
+  "engines": {
+    "node": "^24.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "npm-run-path": "5.3.0"
+    }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "node-addon-api": "8.5.0",
+    "node-gyp": "12.2.0",
+    "oxlint": "^1.50.0"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "setup:dev": "node scripts/setup.js",
+    "setup:clean": "node scripts/setup-clean.js",
+    "dev": "pnpm dev:backend & pnpm dev:frontend",
+    "dev:backend": "cd apps/backend && pnpm dev",
+    "dev:backend:nowatch": "cd apps/backend && pnpm dev:nowatch",
+    "dev:frontend": "cd apps/frontend && pnpm dev",
+    "build": "pnpm -r build",
+    "clean:all": "pnpm -r clean && find . -name '*.tsbuildinfo' -type f -delete && rm -rf node_modules apps/*/node_modules packages/*/node_modules tools/*/node_modules",
+    "test": "pnpm test:unit",
+    "test:unit": "pnpm --filter @cortex/backend test && pnpm --filter @cortex/frontend test && pnpm --filter @cortex/ai test && pnpm --filter @cortex/queue test",
+    "test:integration": "echo 'Run a specific integration suite: test:integration:api, test:integration:ai:local, etc.' && exit 1",
+    "test:integration:api": "pnpm --filter @cortex/backend test:integration",
+    "test:integration:api:start": "./scripts/integration-api-start.sh",
+    "test:integration:ai:local": "pnpm --filter @cortex/ai test:integration:local",
+    "test:integration:ai:openrouter": "pnpm --filter @cortex/ai test:integration:openrouter",
+    "test:integration:bullmq": "pnpm --filter @cortex/queue test:bullmq",
+    "lint": "pnpm lint:biome && pnpm lint:oxlint",
+    "lint:biome": "biome lint ./",
+    "lint:oxlint": "oxlint --tsconfig tsconfig.oxlint.json --max-warnings=0 --report-unused-disable-directives apps packages tools",
+    "format": "biome format --write ./",
+    "check": "biome check ./",
+    "fix": "biome check --write ./",
+    "typecheck": "pnpm -r typecheck",
+    "typecheck:backend": "pnpm --filter @cortex/backend typecheck",
+    "typecheck:frontend": "pnpm --filter @cortex/frontend typecheck",
+    "config:show": "pnpm --filter @cortex/backend config:show",
+    "app:upgrade": "pnpm --filter @cortex/backend app:upgrade",
+    "app:upgrade-check": "pnpm --filter @cortex/backend app:upgrade-check",
+    "cli": "pnpm --filter @cortex/cli exec tsx main.ts",
+    "cortex": "pnpm --filter @cortex/cli exec tsx main.ts"
+  }
+}

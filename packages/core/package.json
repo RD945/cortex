@@ -1,0 +1,58 @@
+{
+  "name": "@cortex/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Core utilities for Cortex applications - ID generation, encryption, types",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./id": {
+      "development": "./src/id-generator.ts",
+      "types": "./src/id-generator.ts",
+      "default": "./dist/id-generator.js"
+    },
+    "./encryption": {
+      "development": "./src/encryption.ts",
+      "types": "./src/encryption.ts",
+      "default": "./dist/encryption.js"
+    },
+    "./types": {
+      "development": "./src/types.ts",
+      "types": "./src/types.ts",
+      "default": "./dist/types.js"
+    },
+    "./utils": {
+      "development": "./src/utils.ts",
+      "types": "./src/utils.ts",
+      "default": "./dist/utils.js"
+    },
+    "./env-loader": {
+      "development": "./src/env-loader.ts",
+      "types": "./src/env-loader.ts",
+      "default": "./dist/env-loader.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "dotenv": "17.3.1",
+    "nanoid": "5.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3"
+  }
+}
