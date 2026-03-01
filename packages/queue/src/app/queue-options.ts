@@ -144,4 +144,5 @@ export const queueWorkerCategory: Record<QueueName, WorkerCategory> = {
   [QueueNames.NOTE_PROCESSING]: "short",
   [QueueNames.TASK_PROCESSING]: "short",
   [QueueNames.TASK_EXECUTION_PROCESSING]: "medium",
+  [QueueNames.GRAPHITI_INGEST]: "medium",
 };

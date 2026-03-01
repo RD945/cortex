@@ -23,9 +23,9 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 info() { echo -e "${CYAN}→${NC} $1"; }
-success() { echo -e "${GREEN}✓${NC} $1"; }
+success() { echo -e "${GREEN}${NC} $1"; }
 warn() { echo -e "${YELLOW}!${NC} $1"; }
-error() { echo -e "${RED}✗${NC} $1"; exit 1; }
+error() { echo -e "${RED}${NC} $1"; exit 1; }
 
 # Parse arguments
 SEED_DEMO=false
@@ -55,7 +55,7 @@ echo ""
 info "Database type: $DB_TYPE"
 info "Seed demo data: $SEED_DEMO"
 echo ""
-echo -e "${YELLOW}⚠️  WARNING: This will DELETE all data and reset the database!${NC}"
+echo -e "${YELLOW}  WARNING: This will DELETE all data and reset the database!${NC}"
 echo ""
 read -p "Are you sure you want to continue? (y/N): " -n 1 -r
 echo ""
@@ -114,7 +114,7 @@ success "Migrations applied"
 # Step 3: Optionally seed demo data
 if [ "$SEED_DEMO" = true ]; then
     info "Step 3: Seeding demo data..."
-    pnpm --filter @cortex/backend db:seed:demo
+    pnpm --filter @cortex/backend seed:demo
     success "Demo data seeded"
 else
     info "Step 3: Skipping seeding (no --demo flag)"

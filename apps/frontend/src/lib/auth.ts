@@ -21,6 +21,23 @@ export function useAuthSession() {
 }
 
 /**
+ * Utility to initiate OAuth social sign-in / account linking.
+ * Used by the Connections settings page.
+ *
+ * @param provider - "google"
+ * @param callbackURL - Where to redirect after successful auth
+ */
+export async function linkSocialProvider(
+  provider: "google",
+  callbackURL = "/settings?tab=connections",
+) {
+  return authClient.signIn.social({
+    provider,
+    callbackURL,
+  });
+}
+
+/**
  * Utility function for client-side authentication actions
  * This properly uses the Better Auth client SDK
  */
@@ -28,5 +45,5 @@ export const auth = {
   signIn: authClient.signIn.email,
   signOut: authClient.signOut,
   signUp: authClient.signUp.email,
-  // Add other auth methods as needed
+  linkSocial: linkSocialProvider,
 } as const;

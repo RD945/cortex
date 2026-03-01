@@ -22,19 +22,19 @@ interface EditChannelDialogProps {
 const platformInfo = {
   telegram: {
     name: "Telegram",
-    icon: "📱",
+    icon: "",
   },
   slack: {
     name: "Slack",
-    icon: "💬",
+    icon: "",
   },
   whatsapp: {
     name: "WhatsApp",
-    icon: "💚",
+    icon: "",
   },
   email: {
     name: "Email",
-    icon: "📧",
+    icon: "",
   },
 } as const;
 

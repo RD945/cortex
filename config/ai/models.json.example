@@ -1,9 +1,9 @@
 {
   "models": {
-    "llama-cpp:qwen3-14b-q4": {
-      "name": "Qwen 3 14B (Q4_K_XL)",
+    "llama-cpp:qwen3-1.7b-q4": {
+      "name": "Qwen 3 1.7B (Q4_K_XL)",
       "provider": "llama-cpp",
-      "providerModel": "unsloth/Qwen3-14B-GGUF:Q4_K_XL",
+      "providerModel": "unsloth/Qwen3-1.7B-GGUF:Q4_K_XL",
       "capabilities": {
         "modalities": { "input": ["text"], "output": ["text"] },
         "streaming": true,
@@ -15,11 +15,11 @@
       },
       "tokenizer": { "type": "sentencepiece", "name": "qwen" },
       "source": {
-        "url": "https://huggingface.co/unsloth/Qwen3-14B-GGUF",
+        "url": "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF",
         "format": "gguf",
         "quantization": "Q4_K_XL",
-        "sizeBytes": 9159818624,
-        "architecture": { "layers": 40, "kvHeads": 8, "headDim": 128 }
+        "sizeBytes": 1258291200,
+        "architecture": { "layers": 28, "kvHeads": 4, "headDim": 128 }
       }
     },
     "llama-cpp:gemma-3-4b-q4": {

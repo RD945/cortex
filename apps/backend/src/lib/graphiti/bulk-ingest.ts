@@ -15,7 +15,7 @@ import { getStorage } from "../storage/index.js";
 
 const logger = createChildLogger("graphiti-ingest");
 
-const { notes, bookmarks, documents } = schema;
+const { notes, bookmarks, documents, tasks } = schema;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -27,13 +27,14 @@ export interface BulkIngestOptions {
   /** Max items per content type (default: 500) */
   batchSize?: number;
   /** Content types to ingest */
-  contentTypes?: Array<"notes" | "bookmarks" | "documents">;
+  contentTypes?: Array<"notes" | "bookmarks" | "documents" | "tasks">;
 }
 
 export interface BulkIngestResult {
   notes: { processed: number; errors: number };
   bookmarks: { processed: number; errors: number };
   documents: { processed: number; errors: number };
+  tasks: { processed: number; errors: number };
   duration: number;
 }
 
@@ -298,6 +299,97 @@ async function ingestDocuments(
   return { processed, errors };
 }
 
+// ─── Tasks Ingestion ─────────────────────────────────────────────────────────
+
+async function ingestTasks(
+  userId: string,
+  sinceDate?: Date,
+  limit = 500,
+): Promise<{ processed: number; errors: number }> {
+  let processed = 0;
+  let errors = 0;
+
+  try {
+    // Query tasks
+    const conditions = [
+      eq(tasks.userId, userId),
+      isNotNull(tasks.title),
+    ];
+
+    if (sinceDate) {
+      conditions.push(gt(tasks.updatedAt, sinceDate));
+    }
+
+    const userTasks = await db
+      .select({
+        id: tasks.id,
+        title: tasks.title,
+        description: tasks.description,
+        status: tasks.status,
+        dueDate: tasks.dueDate,
+        flagColor: tasks.flagColor,
+        isPinned: tasks.isPinned,
+        completedAt: tasks.completedAt,
+        createdAt: tasks.createdAt,
+        updatedAt: tasks.updatedAt,
+      })
+      .from(tasks)
+      .where(and(...conditions))
+      .orderBy(desc(tasks.updatedAt))
+      .limit(limit);
+
+    if (userTasks.length === 0) {
+      logger.debug({ userId }, "No tasks to ingest");
+      return { processed: 0, errors: 0 };
+    }
+
+    // Convert tasks to Graphiti messages
+    const messages: GraphitiMessage[] = userTasks
+      .filter((task) => task.title && task.title.trim().length > 0)
+      .map((task) => {
+        const parts = [`[Task: ${task.title}]`];
+        
+        // Status info
+        const statusDisplay = task.status === "completed" ? "completed" : 
+                              task.status === "in-progress" ? "in progress" : "not started";
+        parts.push(`Status: ${statusDisplay}`);
+        
+        if (task.description) parts.push(`Description: ${task.description}`);
+        if (task.dueDate) parts.push(`Due date: ${task.dueDate.toISOString().split('T')[0]}`);
+        if (task.flagColor) parts.push(`Priority flag: ${task.flagColor}`);
+        if (task.isPinned) parts.push(`This task is pinned`);
+        if (task.completedAt) parts.push(`Completed on: ${task.completedAt.toISOString().split('T')[0]}`);
+
+        return {
+          role_type: "user" as const,
+          content: parts.join("\n"),
+          source_description: `cortex task ${task.id}`,
+          timestamp: task.updatedAt?.toISOString() ?? task.createdAt?.toISOString(),
+        };
+      });
+
+    // Batch and send
+    const batches = batchMessages(messages, 10);
+    for (const batch of batches) {
+      try {
+        await graphitiClient.addMessages(userId, batch);
+        processed += batch.length;
+        await new Promise((r) => setTimeout(r, 100));
+      } catch (err) {
+        logger.warn({ err, userId, batchSize: batch.length }, "Failed to ingest task batch");
+        errors += batch.length;
+      }
+    }
+
+    logger.info({ userId, processed, errors, total: userTasks.length }, "Tasks ingestion complete");
+  } catch (err) {
+    logger.error({ err, userId }, "Tasks ingestion failed");
+    throw err;
+  }
+
+  return { processed, errors };
+}
+
 // ─── Main Bulk Ingest Function ───────────────────────────────────────────────
 
 /**
@@ -320,7 +412,7 @@ export async function bulkIngestForUser(
     userId,
     sinceDate,
     batchSize = 500,
-    contentTypes = ["notes", "bookmarks", "documents"],
+    contentTypes = ["notes", "bookmarks", "documents", "tasks"],
   } = options;
 
   const startTime = Date.now();
@@ -331,6 +423,7 @@ export async function bulkIngestForUser(
     notes: { processed: 0, errors: 0 },
     bookmarks: { processed: 0, errors: 0 },
     documents: { processed: 0, errors: 0 },
+    tasks: { processed: 0, errors: 0 },
     duration: 0,
   };
 
@@ -347,6 +440,10 @@ export async function bulkIngestForUser(
     result.documents = await ingestDocuments(userId, sinceDate, batchSize);
   }
 
+  if (contentTypes.includes("tasks")) {
+    result.tasks = await ingestTasks(userId, sinceDate, batchSize);
+  }
+
   result.duration = Date.now() - startTime;
 
   logger.info(
@@ -356,6 +453,7 @@ export async function bulkIngestForUser(
       notes: result.notes,
       bookmarks: result.bookmarks,
       documents: result.documents,
+      tasks: result.tasks,
     },
     "Bulk ingest complete",
   );

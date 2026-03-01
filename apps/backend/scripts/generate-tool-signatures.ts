@@ -30,7 +30,7 @@ async function generateToolSignatures() {
       "tool-signatures.json",
     );
 
-    console.log("📖 Reading tools from:", toolsFilePath);
+    console.log(" Reading tools from:", toolsFilePath);
 
     if (!fs.existsSync(toolsFilePath)) {
       throw new Error(`Tools file not found: ${toolsFilePath}`);
@@ -77,7 +77,7 @@ async function generateToolSignatures() {
         signature,
       });
 
-      console.log(`✅ Extracted signature for: ${functionName}`);
+      console.log(`Extracted signature for: ${functionName}`);
       match = functionPattern.exec(sourceCode);
     }
 
@@ -104,10 +104,10 @@ async function generateToolSignatures() {
 
     fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
 
-    console.log(`🎉 Generated ${signatures.length} tool signatures`);
-    console.log(`📝 Output written to: ${outputPath}`);
+    console.log(`Generated ${signatures.length} tool signatures`);
+    console.log(`Output written to: ${outputPath}`);
   } catch (error) {
-    console.error("❌ Failed to generate tool signatures:", error);
+    console.error("Failed to generate tool signatures:", error);
     process.exit(1);
   }
 }

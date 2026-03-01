@@ -160,14 +160,14 @@ The codebase uses a **ports and adapters pattern** to achieve database portabili
 ## Test Coverage
 
 Essential coverage includes:
-- ✅ Type conversions (boolean, timestamp, JSON, numeric)
-- ✅ Transaction CRUD operations
-- ✅ Transaction rollback on error
-- ✅ Schema defaults and constraints
-- ✅ Foreign key enforcement and cascades
-- ✅ Migration execution and validation
-- ✅ Adapter insert/update/delete operations
-- ✅ Error handling (constraint violations)
+-  Type conversions (boolean, timestamp, JSON, numeric)
+-  Transaction CRUD operations
+-  Transaction rollback on error
+-  Schema defaults and constraints
+-  Foreign key enforcement and cascades
+-  Migration execution and validation
+-  Adapter insert/update/delete operations
+-  Error handling (constraint violations)
 
 ## Extending Tests
 

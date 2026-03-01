@@ -8,6 +8,7 @@ import { MobileSettingsMenu } from "@/components/mobile/mobile-settings-menu";
 import AccountSettings from "@/components/settings/AccountSettings";
 import ApiKeyManager from "@/components/settings/ApiKeyManager";
 import AssistantSettings from "@/components/settings/AssistantSettings";
+import ConnectionsSettings from "@/components/settings/ConnectionsSettings";
 import NotificationSettings from "@/components/settings/NotificationSettings";
 import ProfileSettings from "@/components/settings/ProfileSettings";
 import {
@@ -52,6 +53,7 @@ type SettingsTab =
   | "profile"
   | "account"
   | "assistant"
+  | "connections"
   | "notifications"
   | "api-keys"
   | "about";
@@ -81,6 +83,7 @@ export default function SettingsContent() {
         "profile",
         "account",
         "assistant",
+        "connections",
         "notifications",
         "api-keys",
         "about",
@@ -119,6 +122,8 @@ export default function SettingsContent() {
         return <AccountSettings />;
       case "assistant":
         return <AssistantSettings />;
+      case "connections":
+        return <ConnectionsSettings />;
       case "notifications":
         return <NotificationSettings />;
       case "api-keys":
@@ -265,11 +270,13 @@ export default function SettingsContent() {
                   ? "Assistant"
                   : tabParam === "notifications"
                     ? "Notifications"
-                    : tabParam === "api-keys"
-                      ? "API Keys"
-                      : tabParam === "about"
-                        ? "About"
-                        : "Profile"}
+                    : tabParam === "connections"
+                      ? "Connections"
+                      : tabParam === "api-keys"
+                        ? "API Keys"
+                        : tabParam === "about"
+                          ? "About"
+                          : "Profile"}
             </h1>
             <p className="text-muted-foreground mt-1 hidden md:block">
               Manage your {tabParam === "api-keys" ? "API keys" : tabParam}{" "}
@@ -304,7 +311,7 @@ export default function SettingsContent() {
         }}
         className="space-y-4"
       >
-        <TabsList className="grid w-full md:w-auto md:inline-flex grid-cols-6 h-auto p-1">
+        <TabsList className="grid w-full md:w-auto md:inline-flex grid-cols-7 h-auto p-1">
           <TabsTrigger value="profile" className="py-2.5">
             Profile
           </TabsTrigger>
@@ -313,6 +320,9 @@ export default function SettingsContent() {
           </TabsTrigger>
           <TabsTrigger value="assistant" className="py-2.5">
             Assistant
+          </TabsTrigger>
+          <TabsTrigger value="connections" className="py-2.5">
+            Connections
           </TabsTrigger>
           <TabsTrigger value="notifications" className="py-2.5">
             Notifications
@@ -335,6 +345,10 @@ export default function SettingsContent() {
 
         <TabsContent value="assistant">
           <AssistantSettings />
+        </TabsContent>
+
+        <TabsContent value="connections">
+          <ConnectionsSettings />
         </TabsContent>
 
         <TabsContent value="notifications">

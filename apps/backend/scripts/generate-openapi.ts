@@ -90,7 +90,7 @@ async function main() {
   await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, json, "utf8");
 
-  console.log(`✅ OpenAPI spec written to ${outputPath}`);
+  console.log(`OpenAPI spec written to ${outputPath}`);
 
   // Gracefully close any Redis/BullMQ connections that may have been opened
   // Import closeQueues only when needed to avoid initializing Redis during build
@@ -98,7 +98,7 @@ async function main() {
     const { closeQueues } = await import("../src/lib/queue/index.js");
     await closeQueues();
   } catch (err) {
-    console.warn("⚠️  Failed to close queues cleanly:", err);
+    console.warn("Failed to close queues cleanly:", err);
   }
 
   // Ensure the process exits even if some handles are still keeping Node alive
@@ -106,7 +106,7 @@ async function main() {
 }
 
 main().catch(async (err) => {
-  console.error("❌ Failed to generate OpenAPI spec:", err);
+  console.error("Failed to generate OpenAPI spec:", err);
   // Attempt to close queues before exiting with error
   try {
     const { closeQueues } = await import("../src/lib/queue/index.js");

@@ -227,7 +227,7 @@ export function useChannels() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message:
-            "🧪 Test message from Cortex! If you can see this, your channel is working correctly.",
+            " Test message from Cortex! If you can see this, your channel is working correctly.",
           severity: "info",
           targetChannels: [channelId],
         }),
@@ -248,7 +248,7 @@ export function useChannels() {
 
       if (successCount === totalCount) {
         toast.success(
-          "🎉 Test message sent successfully! Check your Telegram channel.",
+          " Test message sent successfully! Check your Telegram channel.",
         );
       } else {
         toast.success(

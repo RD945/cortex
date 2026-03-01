@@ -126,7 +126,7 @@ function validateBasicStreamStructure(events: StreamEvent[]) {
 function getCombinedTextContent(events: StreamEvent[]): string {
   const textChunks = events.filter((e) => e.type === "text-chunk");
   console.log(
-    "🔍 getCombinedTextContent: Found",
+    " getCombinedTextContent: Found",
     textChunks.length,
     "text-chunk events",
   );
@@ -134,7 +134,7 @@ function getCombinedTextContent(events: StreamEvent[]): string {
   const contents = textChunks.map((e) => {
     const content = e.content || "";
     console.log(
-      "🔍 getCombinedTextContent: Chunk content:",
+      " getCombinedTextContent: Chunk content:",
       JSON.stringify(content),
     );
     return content;
@@ -142,7 +142,7 @@ function getCombinedTextContent(events: StreamEvent[]): string {
 
   const combined = contents.join("");
   console.log(
-    "🔍 getCombinedTextContent: Combined result:",
+    " getCombinedTextContent: Combined result:",
     JSON.stringify(combined),
   );
   return combined;
@@ -174,7 +174,7 @@ function validateNoToolCallJsonInText(events: StreamEvent[]): void {
   ];
 
   console.log(
-    "🔍 validateNoToolCallJsonInText: Checking",
+    " validateNoToolCallJsonInText: Checking",
     combinedText.length,
     "characters for JSON patterns",
   );
@@ -184,15 +184,15 @@ function validateNoToolCallJsonInText(events: StreamEvent[]): void {
     const match = combinedText.match(pattern);
     if (match) {
       console.error(
-        "❌ CRITICAL: Tool call JSON detected in text-chunk events!",
+        " CRITICAL: Tool call JSON detected in text-chunk events!",
       );
-      console.error("🚨 Pattern matched:", pattern.source);
-      console.error("🚨 Match found:", match[0]);
+      console.error(" Pattern matched:", pattern.source);
+      console.error(" Match found:", match[0]);
       console.error(
-        "🚨 Context:",
+        " Context:",
         combinedText.substring(match.index! - 50, match.index! + 150),
       );
-      console.error("🚨 Full text content:", combinedText);
+      console.error(" Full text content:", combinedText);
       throw new Error(
         `Tool call JSON pattern detected in text-chunk: ${match[0]}`,
       );
@@ -204,15 +204,15 @@ function validateNoToolCallJsonInText(events: StreamEvent[]): void {
     const match = combinedText.match(pattern);
     if (match) {
       console.error(
-        "❌ CRITICAL: Unparsed response JSON detected in text-chunk events!",
+        " CRITICAL: Unparsed response JSON detected in text-chunk events!",
       );
-      console.error("🚨 Pattern matched:", pattern.source);
-      console.error("🚨 Match found:", match[0]);
+      console.error(" Pattern matched:", pattern.source);
+      console.error(" Match found:", match[0]);
       console.error(
-        "🚨 Context:",
+        " Context:",
         combinedText.substring(match.index! - 50, match.index! + 150),
       );
-      console.error("🚨 Full text content:", combinedText);
+      console.error(" Full text content:", combinedText);
       throw new Error(
         `Unparsed response JSON pattern detected in text-chunk: ${match[0]}`,
       );
@@ -220,7 +220,7 @@ function validateNoToolCallJsonInText(events: StreamEvent[]): void {
   }
 
   console.log(
-    "✅ validateNoToolCallJsonInText: No JSON patterns detected in text-chunk events",
+    " validateNoToolCallJsonInText: No JSON patterns detected in text-chunk events",
   );
 }
 
@@ -239,7 +239,7 @@ function validateToolCallEventStructure(events: StreamEvent[]): void {
   }
 
   console.log(
-    "🔍 validateToolCallEventStructure: Validating",
+    " validateToolCallEventStructure: Validating",
     toolCallEvents.length,
     "tool call events",
   );
@@ -276,7 +276,7 @@ function validateToolCallEventStructure(events: StreamEvent[]): void {
   }
 
   console.log(
-    "✅ validateToolCallEventStructure: All tool call events are properly structured",
+    " validateToolCallEventStructure: All tool call events are properly structured",
   );
 }
 
@@ -286,7 +286,7 @@ function validateToolCallEventStructure(events: StreamEvent[]): void {
  */
 function validateStreamingIntegrity(events: StreamEvent[]): void {
   console.log(
-    "\n🔍 validateStreamingIntegrity: Running comprehensive validation...",
+    "\n validateStreamingIntegrity: Running comprehensive validation...",
   );
 
   // Basic structure validation
@@ -300,7 +300,7 @@ function validateStreamingIntegrity(events: StreamEvent[]): void {
 
   // Event sequencing validation
   const eventTypes = events.map((e) => e.type);
-  console.log("📊 Event sequence:", eventTypes);
+  console.log(" Event sequence:", eventTypes);
 
   // Last event must be 'done'
   expect(eventTypes[eventTypes.length - 1]).toBe("done");
@@ -315,10 +315,10 @@ function validateStreamingIntegrity(events: StreamEvent[]): void {
       : -1;
 
   if (lastToolCallIndex >= 0 && firstTextChunkAfterTools >= 0) {
-    console.log("✅ Tool calls properly sequenced before final text chunks");
+    console.log(" Tool calls properly sequenced before final text chunks");
   }
 
-  console.log("✅ validateStreamingIntegrity: All validation checks passed");
+  console.log(" validateStreamingIntegrity: All validation checks passed");
 }
 
 describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
@@ -348,7 +348,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     if (response.status === 201) {
       const note = (await response.json()) as NoteEntry;
       testNoteId = note.id;
-      console.log(`✅ Test note created for streaming tests: ${testNoteId}`);
+      console.log(` Test note created for streaming tests: ${testNoteId}`);
     }
   });
 
@@ -390,9 +390,9 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     expect(textContent.length).toBeGreaterThan(0);
 
     // Debug logging to see what the AI actually responded
-    console.log("\n🔍 DEBUG: Factual Query Test");
-    console.log("📊 Total events received:", events.length);
-    console.log("📝 All streaming events:", JSON.stringify(events, null, 2));
+    console.log("\n DEBUG: Factual Query Test");
+    console.log(" Total events received:", events.length);
+    console.log(" All streaming events:", JSON.stringify(events, null, 2));
 
     // Debug event types
     const eventTypes = events.map((e) => e.type);
@@ -403,21 +403,21 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
       },
       {} as Record<string, number>,
     );
-    console.log("📊 Event type counts:", eventTypeCounts);
+    console.log(" Event type counts:", eventTypeCounts);
 
     // Debug text-chunk events specifically
     const textChunkEvents = events.filter((e) => e.type === "text-chunk");
-    console.log("📄 Text-chunk events count:", textChunkEvents.length);
+    console.log(" Text-chunk events count:", textChunkEvents.length);
     console.log(
-      "📄 Text-chunk events:",
+      " Text-chunk events:",
       textChunkEvents.map((e) => ({
         content: e.content,
         timestamp: e.timestamp,
       })),
     );
 
-    console.log("📄 Combined text content:", textContent);
-    console.log("📄 Text content length:", textContent.length);
+    console.log(" Combined text content:", textContent);
+    console.log(" Text content length:", textContent.length);
 
     const textLower = textContent.toLowerCase();
     const factualKeywords = ["washington", "1776", "founded", "capital"];
@@ -425,54 +425,54 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
       textLower.includes(keyword),
     );
 
-    console.log("🔍 Checking keywords in text-chunk content:", factualKeywords);
-    console.log("✅ Found keywords in text-chunks:", foundKeywords);
+    console.log(" Checking keywords in text-chunk content:", factualKeywords);
+    console.log(" Found keywords in text-chunks:", foundKeywords);
     console.log(
-      "❌ Missing keywords in text-chunks:",
+      " Missing keywords in text-chunks:",
       factualKeywords.filter((k) => !foundKeywords.includes(k)),
     );
 
     // FALLBACK: Search ALL event content regardless of type
     console.log(
-      "\n🚨 FALLBACK: Searching ALL event content regardless of type",
+      "\n FALLBACK: Searching ALL event content regardless of type",
     );
     const allEventContent = events
       .map((e) => e.content || "")
       .join("")
       .toLowerCase();
-    console.log("📄 All event content combined:", allEventContent);
+    console.log(" All event content combined:", allEventContent);
 
     const allFoundKeywords = factualKeywords.filter((keyword) =>
       allEventContent.includes(keyword),
     );
-    console.log("✅ Found keywords in ALL events:", allFoundKeywords);
+    console.log(" Found keywords in ALL events:", allFoundKeywords);
     console.log(
-      "❌ Missing keywords in ALL events:",
+      " Missing keywords in ALL events:",
       factualKeywords.filter((k) => !allFoundKeywords.includes(k)),
     );
 
     const hasFactualKeywords = foundKeywords.length > 0;
     const hasFactualKeywordsInAllEvents = allFoundKeywords.length > 0;
 
-    console.log("\n📊 SUMMARY:");
-    console.log("📄 text-chunk events have keywords:", hasFactualKeywords);
-    console.log("📄 ANY events have keywords:", hasFactualKeywordsInAllEvents);
+    console.log("\n SUMMARY:");
+    console.log(" text-chunk events have keywords:", hasFactualKeywords);
+    console.log(" ANY events have keywords:", hasFactualKeywordsInAllEvents);
 
     if (!hasFactualKeywords) {
       console.error(
-        "❌ TEST FAILURE: No factual keywords found in text-chunk events",
+        " TEST FAILURE: No factual keywords found in text-chunk events",
       );
-      console.error("📄 text-chunk content:", textContent);
-      console.error("📄 All event content:", allEventContent);
-      console.error("🔍 Searched for keywords:", factualKeywords);
+      console.error(" text-chunk content:", textContent);
+      console.error(" All event content:", allEventContent);
+      console.error(" Searched for keywords:", factualKeywords);
 
       // If keywords exist in other events but not text-chunks, this indicates an event type issue
       if (hasFactualKeywordsInAllEvents) {
         console.error(
-          "🚨 CRITICAL: Keywords found in other events but NOT in text-chunk events!",
+          " CRITICAL: Keywords found in other events but NOT in text-chunk events!",
         );
         console.error(
-          "🚨 This indicates an SSE event type categorization problem!",
+          " This indicates an SSE event type categorization problem!",
         );
       }
     }
@@ -841,7 +841,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     const events = await parseSSEStream(response);
 
     console.log(
-      "\n🔍 JSON ISOLATION TEST: Analyzing events for JSON leakage...",
+      "\n JSON ISOLATION TEST: Analyzing events for JSON leakage...",
     );
 
     // This is the critical test - ensure no JSON appears in text-chunk events
@@ -851,7 +851,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     const textChunks = events.filter((e) => e.type === "text-chunk");
     const toolCallEvents = events.filter((e) => e.type === "tool-call");
 
-    console.log("📊 Event breakdown:");
+    console.log(" Event breakdown:");
     console.log("  - text-chunk events:", textChunks.length);
     console.log("  - tool-call events:", toolCallEvents.length);
 
@@ -876,7 +876,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     expect(textContent).not.toMatch(/\{\s*"type"\s*:\s*"text_response"/);
 
     console.log(
-      "✅ JSON ISOLATION TEST: Tool call JSON properly isolated from text content",
+      " JSON ISOLATION TEST: Tool call JSON properly isolated from text content",
     );
   });
 
@@ -908,7 +908,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     const events = await parseSSEStream(response);
 
     console.log(
-      "\n🔍 UNPARSED RESPONSE TEST: Checking for raw response JSON in text...",
+      "\n UNPARSED RESPONSE TEST: Checking for raw response JSON in text...",
     );
 
     // Comprehensive validation including unparsed response detection
@@ -932,7 +932,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     expect(hasRelevantContent).toBe(true);
 
     console.log(
-      "✅ UNPARSED RESPONSE TEST: No raw response JSON found in text content",
+      " UNPARSED RESPONSE TEST: No raw response JSON found in text content",
     );
   });
 
@@ -967,7 +967,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
       const events = await parseSSEStream(response);
 
       console.log(
-        "\n🔍 MARKDOWN vs JSON TEST: Validating legitimate markdown is preserved...",
+        "\n MARKDOWN vs JSON TEST: Validating legitimate markdown is preserved...",
       );
 
       // Validate overall integrity
@@ -978,7 +978,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
 
       // This test should allow legitimate code examples in markdown
       // but still catch tool call JSON patterns
-      console.log("📄 Text content preview:", textContent.substring(0, 500));
+      console.log(" Text content preview:", textContent.substring(0, 500));
 
       // Should contain JavaScript/JSON related content
       const textLower = textContent.toLowerCase();
@@ -996,7 +996,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
       expect(textContent).not.toMatch(/"arguments"\s*:\s*\{[^}]*"limit"/); // Tool-specific pattern
 
       console.log(
-        "✅ MARKDOWN vs JSON TEST: Legitimate code content preserved, tool JSON patterns absent",
+        " MARKDOWN vs JSON TEST: Legitimate code content preserved, tool JSON patterns absent",
       );
     },
   );
@@ -1029,7 +1029,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     const events = await parseSSEStream(response);
 
     console.log(
-      "\n🔍 EVENT SEQUENCING TEST: Analyzing event flow and content separation...",
+      "\n EVENT SEQUENCING TEST: Analyzing event flow and content separation...",
     );
 
     // Comprehensive validation
@@ -1040,9 +1040,9 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     const toolCallEvents = events.filter((e) => e.type === "tool-call");
     const textChunkEvents = events.filter((e) => e.type === "text-chunk");
 
-    console.log("📊 Event sequence:", eventTypes);
-    console.log("📊 Tool call events:", toolCallEvents.length);
-    console.log("📊 Text chunk events:", textChunkEvents.length);
+    console.log(" Event sequence:", eventTypes);
+    console.log(" Tool call events:", toolCallEvents.length);
+    console.log(" Text chunk events:", textChunkEvents.length);
 
     // Should have both tool calls and text chunks
     expect(toolCallEvents.length).toBeGreaterThan(0);
@@ -1074,7 +1074,7 @@ describe("Streaming Prompt API Integration Tests", { timeout: 60000 }, () => {
     expect(hasUserFriendlyContent).toBe(true);
 
     console.log(
-      "✅ EVENT SEQUENCING TEST: Proper event flow and content separation validated",
+      " EVENT SEQUENCING TEST: Proper event flow and content separation validated",
     );
   });
 });

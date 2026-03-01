@@ -56,10 +56,10 @@ function copyFile(src, dest) {
 
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, dest);
-    console.log(`${colors.green}✓${colors.reset} Copied: ${path.relative(PROJECT_ROOT, src)}`);
+    console.log(`${colors.green}${colors.reset} Copied: ${path.relative(PROJECT_ROOT, src)}`);
     return true;
   } else {
-    console.log(`${colors.yellow}⚠${colors.reset} Not found: ${path.relative(PROJECT_ROOT, src)}`);
+    console.log(`${colors.yellow}${colors.reset} Not found: ${path.relative(PROJECT_ROOT, src)}`);
     return false;
   }
 }
@@ -67,7 +67,7 @@ function copyFile(src, dest) {
 // Copy directory recursively
 function copyDir(src, dest) {
   if (!fs.existsSync(src)) {
-    console.log(`${colors.yellow}⚠${colors.reset} Directory not found: ${path.relative(PROJECT_ROOT, src)}`);
+    console.log(`${colors.yellow}${colors.reset} Directory not found: ${path.relative(PROJECT_ROOT, src)}`);
     return false;
   }
 
@@ -85,13 +85,13 @@ function copyDir(src, dest) {
     }
   }
 
-  console.log(`${colors.green}✓${colors.reset} Copied directory: ${path.relative(PROJECT_ROOT, src)}`);
+  console.log(`${colors.green}${colors.reset} Copied directory: ${path.relative(PROJECT_ROOT, src)}`);
   return true;
 }
 
 // Backup PostgreSQL database
 function backupDatabase(backupDir) {
-  console.log(`${colors.blue}📦${colors.reset} Creating database backup...`);
+  console.log(`${colors.blue}${colors.reset} Creating database backup...`);
 
   const dbBackupPath = path.join(backupDir, 'eclaire_backup.sql');
 
@@ -161,23 +161,23 @@ function backupDatabase(backupDir) {
       cwd: PROJECT_ROOT
     });
 
-    console.log(`${colors.green}✓${colors.reset} Database backup created: ${path.basename(dbBackupPath)}`);
+    console.log(`${colors.green}${colors.reset} Database backup created: ${path.basename(dbBackupPath)}`);
     return true;
 
   } catch (error) {
-    console.error(`${colors.red}✗${colors.reset} Database backup failed: ${error.message}`);
+    console.error(`${colors.red}${colors.reset} Database backup failed: ${error.message}`);
     return false;
   }
 }
 
 // Show what will be backed up
 function showBackupPreview() {
-  console.log(`${colors.bright}${colors.blue}📦 BACKUP PREVIEW${colors.reset}`);
+  console.log(`${colors.bright}${colors.blue} BACKUP PREVIEW${colors.reset}`);
   console.log(`${colors.blue}The following will be BACKED UP:${colors.reset}\n`);
 
   // 1. Database
   console.log(`${colors.bright}${colors.magenta}1. PostgreSQL Database${colors.reset}`);
-  console.log(`${colors.green}   ✓${colors.reset} eclaire database (SQL dump)`);
+  console.log(`${colors.green}   ${colors.reset} eclaire database (SQL dump)`);
 
   // 2. Data directories
   console.log(`\n${colors.bright}${colors.magenta}2. Data Directories${colors.reset}`);
@@ -191,7 +191,7 @@ function showBackupPreview() {
   for (const { name, path: dirPath } of dataDirs) {
     const stats = getDirectoryStats(dirPath);
     if (stats.fileCount > 0) {
-      console.log(`${colors.green}   ✓${colors.reset} ${name}/ (${stats.fileCount} files, ${(stats.size / 1024 / 1024).toFixed(1)}MB)`);
+      console.log(`${colors.green}   ${colors.reset} ${name}/ (${stats.fileCount} files, ${(stats.size / 1024 / 1024).toFixed(1)}MB)`);
     } else {
       console.log(`${colors.yellow}   -${colors.reset} ${name}/ (empty or not found)`);
     }
@@ -210,7 +210,7 @@ function showBackupPreview() {
     const configPath = path.join(PROJECT_ROOT, configFile);
     if (fs.existsSync(configPath)) {
       const size = fs.statSync(configPath).size;
-      console.log(`${colors.green}   ✓${colors.reset} ${configFile} (${size} bytes)`);
+      console.log(`${colors.green}   ${colors.reset} ${configFile} (${size} bytes)`);
     } else {
       console.log(`${colors.yellow}   -${colors.reset} ${configFile} (not found)`);
     }
@@ -220,7 +220,7 @@ function showBackupPreview() {
     const configPath = path.join(PROJECT_ROOT, configDir);
     const stats = getDirectoryStats(configPath);
     if (stats.fileCount > 0) {
-      console.log(`${colors.green}   ✓${colors.reset} ${configDir}/ (${stats.fileCount} files, ${(stats.size / 1024 / 1024).toFixed(1)}MB)`);
+      console.log(`${colors.green}   ${colors.reset} ${configDir}/ (${stats.fileCount} files, ${(stats.size / 1024 / 1024).toFixed(1)}MB)`);
     } else {
       console.log(`${colors.yellow}   -${colors.reset} ${configDir}/ (empty or not found)`);
     }
@@ -236,7 +236,7 @@ function showBackupPreview() {
     const envPath = path.join(PROJECT_ROOT, envFile);
     if (fs.existsSync(envPath)) {
       const size = fs.statSync(envPath).size;
-      console.log(`${colors.green}   ✓${colors.reset} ${envFile} (${size} bytes)`);
+      console.log(`${colors.green}   ${colors.reset} ${envFile} (${size} bytes)`);
     } else {
       console.log(`${colors.yellow}   -${colors.reset} ${envFile} (not found)`);
     }
@@ -247,7 +247,7 @@ function showBackupPreview() {
 
 // Main backup function
 async function createBackup() {
-  console.log(`${colors.bright}${colors.cyan}🚀 Eclaire System Backup${colors.reset}`);
+  console.log(`${colors.bright}${colors.cyan} Eclaire System Backup${colors.reset}`);
   console.log('');
 
   // Show what will be backed up
@@ -261,13 +261,13 @@ async function createBackup() {
     return false;
   }
 
-  console.log(`\n${colors.bright}${colors.cyan}🚀 Starting backup process...${colors.reset}\n`);
+  console.log(`\n${colors.bright}${colors.cyan} Starting backup process...${colors.reset}\n`);
 
   // Create backup directory
   const timestamp = getTimestamp();
   const backupDir = path.join(PROJECT_ROOT, 'backups', timestamp);
 
-  console.log(`${colors.blue}📁${colors.reset} Creating backup directory: backups/${timestamp}`);
+  console.log(`${colors.blue}${colors.reset} Creating backup directory: backups/${timestamp}`);
   ensureDir(backupDir);
 
   let totalFiles = 0;
@@ -335,7 +335,7 @@ async function createBackup() {
   }
 
   // Summary
-  console.log(`\n${colors.bright}${colors.cyan}📊 Backup Summary${colors.reset}`);
+  console.log(`\n${colors.bright}${colors.cyan} Backup Summary${colors.reset}`);
   console.log(`Backup Location: ${colors.yellow}backups/${timestamp}${colors.reset}`);
   console.log(`Files/Directories: ${colors.green}${successCount}/${totalFiles} successful${colors.reset}`);
 
@@ -349,13 +349,13 @@ async function createBackup() {
   }
 
   if (successCount === totalFiles) {
-    console.log(`\n${colors.bright}${colors.green}✅ Backup completed successfully!${colors.reset}`);
+    console.log(`\n${colors.bright}${colors.green} Backup completed successfully!${colors.reset}`);
   } else {
-    console.log(`\n${colors.bright}${colors.yellow}⚠️  Backup completed with warnings${colors.reset}`);
+    console.log(`\n${colors.bright}${colors.yellow}  Backup completed with warnings${colors.reset}`);
     console.log(`${totalFiles - successCount} items could not be backed up`);
   }
 
-  console.log(`\n${colors.cyan}💡 To restore this backup, extract all files back to their original locations.${colors.reset}`);
+  console.log(`\n${colors.cyan} To restore this backup, extract all files back to their original locations.${colors.reset}`);
 }
 
 // Generate file checksum
@@ -384,14 +384,14 @@ function getDirectoryStats(dirPath) {
 
     return { size, fileCount };
   } catch (error) {
-    console.error(`${colors.yellow}⚠${colors.reset} Could not get stats for ${dirPath}: ${error.message}`);
+    console.error(`${colors.yellow}${colors.reset} Could not get stats for ${dirPath}: ${error.message}`);
     return { size: 0, fileCount: 0 };
   }
 }
 
 // Validate PostgreSQL backup
 function validateDatabase(backupPath, dbConfig) {
-  console.log(`${colors.blue}🔍${colors.reset} Validating database backup...`);
+  console.log(`${colors.blue}${colors.reset} Validating database backup...`);
 
   const tempDbName = 'eclaire_validate_temp';
   const { host, port, username, password } = dbConfig;
@@ -446,7 +446,7 @@ function validateDatabase(backupPath, dbConfig) {
       stdio: ['pipe', 'pipe', 'pipe']
     });
 
-    console.log(`${colors.green}✓${colors.reset} Database validation passed: ${tableCount} tables, ~${totalRows} rows`);
+    console.log(`${colors.green}${colors.reset} Database validation passed: ${tableCount} tables, ~${totalRows} rows`);
     return { valid: true, tableCount, totalRows };
 
   } catch (error) {
@@ -460,14 +460,14 @@ function validateDatabase(backupPath, dbConfig) {
       // Ignore cleanup errors
     }
 
-    console.error(`${colors.red}✗${colors.reset} Database validation failed: ${error.message}`);
+    console.error(`${colors.red}${colors.reset} Database validation failed: ${error.message}`);
     return { valid: false, error: error.message };
   }
 }
 
 // Validate backup integrity
 function validateBackup(backupDir) {
-  console.log(`${colors.bright}${colors.cyan}🔍 Validating Backup${colors.reset}`);
+  console.log(`${colors.bright}${colors.cyan} Validating Backup${colors.reset}`);
   console.log(`Backup Directory: ${colors.yellow}${path.relative(PROJECT_ROOT, backupDir)}${colors.reset}\n`);
 
   const validationReport = {
@@ -527,7 +527,7 @@ function validateBackup(backupDir) {
     validationReport.checks.database = dbValidation;
     if (!dbValidation.valid) allValid = false;
   } else {
-    console.error(`${colors.red}✗${colors.reset} Database backup not found`);
+    console.error(`${colors.red}${colors.reset} Database backup not found`);
     validationReport.checks.database = { valid: false, error: 'Backup file not found' };
     allValid = false;
   }
@@ -552,11 +552,11 @@ function validateBackup(backupDir) {
     const fileDiff = Math.abs(srcStats.fileCount - backupStats.fileCount);
 
     if (valid && fileDiff === 0) {
-      console.log(`${colors.green}✓${colors.reset} ${name}: ${backupStats.fileCount} files (${(backupStats.size / 1024 / 1024).toFixed(1)}MB)`);
+      console.log(`${colors.green}${colors.reset} ${name}: ${backupStats.fileCount} files (${(backupStats.size / 1024 / 1024).toFixed(1)}MB)`);
     } else if (valid) {
-      console.log(`${colors.yellow}⚠${colors.reset} ${name}: ${backupStats.fileCount} files (${fileDiff} file difference)`);
+      console.log(`${colors.yellow}${colors.reset} ${name}: ${backupStats.fileCount} files (${fileDiff} file difference)`);
     } else {
-      console.log(`${colors.red}✗${colors.reset} ${name}: Directory missing or empty`);
+      console.log(`${colors.red}${colors.reset} ${name}: Directory missing or empty`);
       allValid = false;
     }
 
@@ -592,15 +592,15 @@ function validateBackup(backupDir) {
     const valid = srcChecksum && backupChecksum && srcChecksum === backupChecksum;
 
     if (valid) {
-      console.log(`${colors.green}✓${colors.reset} ${filename}: Checksum matches`);
+      console.log(`${colors.green}${colors.reset} ${filename}: Checksum matches`);
       configValid++;
     } else if (!srcChecksum) {
-      console.log(`${colors.yellow}⚠${colors.reset} ${filename}: Source file not found`);
+      console.log(`${colors.yellow}${colors.reset} ${filename}: Source file not found`);
     } else if (!backupChecksum) {
-      console.log(`${colors.red}✗${colors.reset} ${filename}: Backup file missing`);
+      console.log(`${colors.red}${colors.reset} ${filename}: Backup file missing`);
       allValid = false;
     } else {
-      console.log(`${colors.red}✗${colors.reset} ${filename}: Checksum mismatch`);
+      console.log(`${colors.red}${colors.reset} ${filename}: Checksum mismatch`);
       allValid = false;
     }
 
@@ -625,15 +625,15 @@ function validateBackup(backupDir) {
     const fileDiff = Math.abs(srcStats.fileCount - backupStats.fileCount);
 
     if (valid && fileDiff === 0) {
-      console.log(`${colors.green}✓${colors.reset} ${name}/: ${backupStats.fileCount} files match`);
+      console.log(`${colors.green}${colors.reset} ${name}/: ${backupStats.fileCount} files match`);
       configValid++;
     } else if (valid) {
-      console.log(`${colors.yellow}⚠${colors.reset} ${name}/: ${backupStats.fileCount} files (${fileDiff} file difference)`);
+      console.log(`${colors.yellow}${colors.reset} ${name}/: ${backupStats.fileCount} files (${fileDiff} file difference)`);
       configValid++;
     } else if (!fs.existsSync(src)) {
-      console.log(`${colors.yellow}⚠${colors.reset} ${name}/: Source directory not found`);
+      console.log(`${colors.yellow}${colors.reset} ${name}/: Source directory not found`);
     } else {
-      console.log(`${colors.red}✗${colors.reset} ${name}/: Backup directory missing or empty`);
+      console.log(`${colors.red}${colors.reset} ${name}/: Backup directory missing or empty`);
       allValid = false;
     }
 
@@ -645,12 +645,12 @@ function validateBackup(backupDir) {
   }
 
   // 4. Summary
-  console.log(`\n${colors.bright}${colors.cyan}📊 Validation Summary${colors.reset}`);
+  console.log(`\n${colors.bright}${colors.cyan} Validation Summary${colors.reset}`);
 
   if (allValid) {
-    console.log(`${colors.bright}${colors.green}✅ Backup validation PASSED${colors.reset}`);
+    console.log(`${colors.bright}${colors.green} Backup validation PASSED${colors.reset}`);
   } else {
-    console.log(`${colors.bright}${colors.red}❌ Backup validation FAILED${colors.reset}`);
+    console.log(`${colors.bright}${colors.red} Backup validation FAILED${colors.reset}`);
   }
 
   console.log(`Config Files: ${colors.green}${configValid}/${configTotal} valid${colors.reset}`);
@@ -664,7 +664,7 @@ function validateBackup(backupDir) {
   // Save validation report
   const reportPath = path.join(backupDir, 'validation-report.json');
   fs.writeFileSync(reportPath, JSON.stringify(validationReport, null, 2));
-  console.log(`${colors.cyan}📝${colors.reset} Validation report saved: ${path.basename(reportPath)}`);
+  console.log(`${colors.cyan}${colors.reset} Validation report saved: ${path.basename(reportPath)}`);
 
   return allValid;
 }
@@ -723,10 +723,10 @@ try {
     // Validate specific backup
     const backupPath = path.resolve(validateBackupPath);
     if (!fs.existsSync(backupPath)) {
-      console.error(`${colors.red}❌ Backup directory not found: ${backupPath}${colors.reset}`);
+      console.error(`${colors.red} Backup directory not found: ${backupPath}${colors.reset}`);
       process.exit(1);
     }
-    console.log(`${colors.cyan}🔍 Validating specific backup: ${backupPath}${colors.reset}\n`);
+    console.log(`${colors.cyan} Validating specific backup: ${backupPath}${colors.reset}\n`);
     const isValid = validateBackup(backupPath);
     process.exit(isValid ? 0 : 1);
 
@@ -734,10 +734,10 @@ try {
     // Validate most recent backup
     const mostRecentBackup = getMostRecentBackup();
     if (!mostRecentBackup) {
-      console.error(`${colors.red}❌ No backups found in backups/ directory${colors.reset}`);
+      console.error(`${colors.red} No backups found in backups/ directory${colors.reset}`);
       process.exit(1);
     }
-    console.log(`${colors.cyan}🔍 Validating most recent backup: ${path.basename(mostRecentBackup)}${colors.reset}\n`);
+    console.log(`${colors.cyan} Validating most recent backup: ${path.basename(mostRecentBackup)}${colors.reset}\n`);
     const isValid = validateBackup(mostRecentBackup);
     process.exit(isValid ? 0 : 1);
 
@@ -746,7 +746,7 @@ try {
     await createBackup();
   }
 } catch (error) {
-  console.error(`${colors.red}💥 Operation failed: ${error.message}${colors.reset}`);
+  console.error(`${colors.red} Operation failed: ${error.message}${colors.reset}`);
   process.exit(1);
 } finally {
   rl.close();

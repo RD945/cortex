@@ -22,7 +22,7 @@ async function generateNoteTags(
     {
       role: "system",
       content:
-        "You are an expert content analyzer that generates relevant tags for notes. Always respond with a JSON array of strings containing 3-5 relevant tags.",
+        "You are Cortex, an expert content analyzer that generates relevant tags for notes. Always respond with a JSON array of strings containing 3-5 relevant tags.",
     },
     {
       role: "user",

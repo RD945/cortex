@@ -57,12 +57,12 @@ function getDirectoryStats(dirPath) {
 
 // Show what will be deleted
 function showCleanupPreview() {
-  console.log(`${colors.bright}${colors.red}⚠️  CLEANUP PREVIEW${colors.reset}`);
+  console.log(`${colors.bright}${colors.red}  CLEANUP PREVIEW${colors.reset}`);
   console.log(`${colors.red}The following will be PERMANENTLY DELETED:${colors.reset}\n`);
 
   // 1. Database
   console.log(`${colors.bright}${colors.magenta}1. PostgreSQL Database${colors.reset}`);
-  console.log(`${colors.red}   ✗${colors.reset} eclaire database (will be DROPPED)`);
+  console.log(`${colors.red}   ${colors.reset} eclaire database (will be DROPPED)`);
 
   // 2. Data directory
   console.log(`\n${colors.bright}${colors.magenta}2. Data Directory${colors.reset}`);
@@ -70,7 +70,7 @@ function showCleanupPreview() {
   const dataStats = getDirectoryStats(dataDir);
 
   if (dataStats.fileCount > 0) {
-    console.log(`${colors.red}   ✗${colors.reset} data/ directory (${dataStats.fileCount} files, ${(dataStats.size / 1024 / 1024).toFixed(1)}MB)`);
+    console.log(`${colors.red}   ${colors.reset} data/ directory (${dataStats.fileCount} files, ${(dataStats.size / 1024 / 1024).toFixed(1)}MB)`);
 
     // Show subdirectories
     const subdirs = ['db', 'users', 'logs', 'redis', 'browser-data'];
@@ -78,7 +78,7 @@ function showCleanupPreview() {
       const subdirPath = path.join(dataDir, subdir);
       const subdirStats = getDirectoryStats(subdirPath);
       if (subdirStats.fileCount > 0) {
-        console.log(`${colors.red}     ✗${colors.reset} data/${subdir}/ (${subdirStats.fileCount} files, ${(subdirStats.size / 1024 / 1024).toFixed(1)}MB)`);
+        console.log(`${colors.red}     ${colors.reset} data/${subdir}/ (${subdirStats.fileCount} files, ${(subdirStats.size / 1024 / 1024).toFixed(1)}MB)`);
       }
     }
   } else {
@@ -95,7 +95,7 @@ function showCleanupPreview() {
     const envPath = path.join(PROJECT_ROOT, envFile);
     if (fs.existsSync(envPath)) {
       const size = fs.statSync(envPath).size;
-      console.log(`${colors.red}   ✗${colors.reset} ${envFile} (${size} bytes)`);
+      console.log(`${colors.red}   ${colors.reset} ${envFile} (${size} bytes)`);
     } else {
       console.log(`${colors.yellow}   -${colors.reset} ${envFile} (not found)`);
     }
@@ -106,23 +106,23 @@ function showCleanupPreview() {
   const configDir = path.join(PROJECT_ROOT, 'config/ai');
   const configStats = getDirectoryStats(configDir);
   if (configStats.fileCount > 0) {
-    console.log(`${colors.red}   ✗${colors.reset} config/ai/ (${configStats.fileCount} files, ${(configStats.size / 1024 / 1024).toFixed(1)}MB)`);
+    console.log(`${colors.red}   ${colors.reset} config/ai/ (${configStats.fileCount} files, ${(configStats.size / 1024 / 1024).toFixed(1)}MB)`);
   } else {
     console.log(`${colors.yellow}   -${colors.reset} config/ai/ (empty or not found)`);
   }
 
   // What will NOT be deleted
   console.log(`\n${colors.bright}${colors.green}Items that will NOT be deleted:${colors.reset}`);
-  console.log(`${colors.green}   ✓${colors.reset} Downloaded models`);
-  console.log(`${colors.green}   ✓${colors.reset} Node modules`);
-  console.log(`${colors.green}   ✓${colors.reset} Build artifacts (dist/)`);
-  console.log(`${colors.green}   ✓${colors.reset} Backups directory`);
-  console.log(`${colors.green}   ✓${colors.reset} Source code and git history`);
+  console.log(`${colors.green}   ${colors.reset} Downloaded models`);
+  console.log(`${colors.green}   ${colors.reset} Node modules`);
+  console.log(`${colors.green}   ${colors.reset} Build artifacts (dist/)`);
+  console.log(`${colors.green}   ${colors.reset} Backups directory`);
+  console.log(`${colors.green}   ${colors.reset} Source code and git history`);
 }
 
 // Drop PostgreSQL database
 async function dropDatabase(dryRun = false) {
-  console.log(`${colors.bright}${colors.magenta}🗑️  Database Cleanup${colors.reset}`);
+  console.log(`${colors.bright}${colors.magenta}  Database Cleanup${colors.reset}`);
 
   if (dryRun) {
     console.log(`${colors.cyan}→${colors.reset} Would drop eclaire database`);
@@ -192,13 +192,13 @@ async function dropDatabase(dryRun = false) {
       stdio: ['pipe', 'pipe', 'pipe']
     });
 
-    console.log(`${colors.green}✓${colors.reset} Database dropped successfully`);
+    console.log(`${colors.green}${colors.reset} Database dropped successfully`);
     return true;
 
   } catch (error) {
     // Check if this is a PostgreSQL connection error
     if (error.message.includes('Connection refused') || error.message.includes('connection to server')) {
-      console.error(`${colors.red}✗${colors.reset} PostgreSQL is not running`);
+      console.error(`${colors.red}${colors.reset} PostgreSQL is not running`);
       console.log(`${colors.cyan}ℹ️${colors.reset}  The database cannot be dropped while PostgreSQL is stopped.`);
       console.log(`${colors.cyan}ℹ️${colors.reset}  Please start PostgreSQL first, then run cleanup again.`);
       console.log('');
@@ -206,7 +206,7 @@ async function dropDatabase(dryRun = false) {
       console.log(`  ${colors.cyan}•${colors.reset} Docker: ${colors.yellow}docker start eclaire-postgres${colors.reset}`);
       console.log(`  ${colors.cyan}•${colors.reset} Or check your PostgreSQL service status`);
     } else {
-      console.error(`${colors.red}✗${colors.reset} Database cleanup failed: ${error.message}`);
+      console.error(`${colors.red}${colors.reset} Database cleanup failed: ${error.message}`);
     }
     return false;
   }
@@ -214,12 +214,12 @@ async function dropDatabase(dryRun = false) {
 
 // Remove data directory completely
 async function removeDataDirectory(dryRun = false) {
-  console.log(`\n${colors.bright}${colors.magenta}📁 Data Directory Cleanup${colors.reset}`);
+  console.log(`\n${colors.bright}${colors.magenta} Data Directory Cleanup${colors.reset}`);
 
   const dataDir = path.join(PROJECT_ROOT, 'data');
 
   if (!fs.existsSync(dataDir)) {
-    console.log(`${colors.yellow}⚠${colors.reset} data/ directory not found`);
+    console.log(`${colors.yellow}${colors.reset} data/ directory not found`);
     return true;
   }
 
@@ -234,17 +234,17 @@ async function removeDataDirectory(dryRun = false) {
   try {
     console.log(`${colors.cyan}→${colors.reset} Removing data/ directory...`);
     execSync(`rm -rf "${dataDir}"`);
-    console.log(`${colors.green}✓${colors.reset} data/ directory removed successfully`);
+    console.log(`${colors.green}${colors.reset} data/ directory removed successfully`);
     return true;
   } catch (error) {
-    console.error(`${colors.red}✗${colors.reset} Failed to remove data/ directory: ${error.message}`);
+    console.error(`${colors.red}${colors.reset} Failed to remove data/ directory: ${error.message}`);
     return false;
   }
 }
 
 // Remove environment files
 async function removeEnvironmentFiles(dryRun = false) {
-  console.log(`\n${colors.bright}${colors.magenta}🔐 Environment Files Cleanup${colors.reset}`);
+  console.log(`\n${colors.bright}${colors.magenta} Environment Files Cleanup${colors.reset}`);
 
   const envFiles = [
     '.env'
@@ -258,7 +258,7 @@ async function removeEnvironmentFiles(dryRun = false) {
     totalCount++;
 
     if (!fs.existsSync(envPath)) {
-      console.log(`${colors.yellow}⚠${colors.reset} ${envFile}: Not found`);
+      console.log(`${colors.yellow}${colors.reset} ${envFile}: Not found`);
       successCount++; // Count as success since goal is to not have the file
       continue;
     }
@@ -271,10 +271,10 @@ async function removeEnvironmentFiles(dryRun = false) {
 
     try {
       fs.unlinkSync(envPath);
-      console.log(`${colors.green}✓${colors.reset} Removed: ${envFile}`);
+      console.log(`${colors.green}${colors.reset} Removed: ${envFile}`);
       successCount++;
     } catch (error) {
-      console.error(`${colors.red}✗${colors.reset} Failed to remove ${envFile}: ${error.message}`);
+      console.error(`${colors.red}${colors.reset} Failed to remove ${envFile}: ${error.message}`);
     }
   }
 
@@ -283,12 +283,12 @@ async function removeEnvironmentFiles(dryRun = false) {
 
 // Remove config files
 async function removeConfigFiles(dryRun = false) {
-  console.log(`\n${colors.bright}${colors.magenta}⚙️  Configuration Files Cleanup${colors.reset}`);
+  console.log(`\n${colors.bright}${colors.magenta}  Configuration Files Cleanup${colors.reset}`);
 
   const configDir = path.join(PROJECT_ROOT, 'config/ai');
 
   if (!fs.existsSync(configDir)) {
-    console.log(`${colors.yellow}⚠${colors.reset} config/ai/: Not found`);
+    console.log(`${colors.yellow}${colors.reset} config/ai/: Not found`);
     return true;
   }
 
@@ -302,10 +302,10 @@ async function removeConfigFiles(dryRun = false) {
 
   try {
     execSync(`rm -rf "${configDir}"`);
-    console.log(`${colors.green}✓${colors.reset} Removed: config/ai/ directory`);
+    console.log(`${colors.green}${colors.reset} Removed: config/ai/ directory`);
     return true;
   } catch (error) {
-    console.error(`${colors.red}✗${colors.reset} Failed to remove config/ai/: ${error.message}`);
+    console.error(`${colors.red}${colors.reset} Failed to remove config/ai/: ${error.message}`);
     return false;
   }
 }
@@ -314,16 +314,16 @@ async function removeConfigFiles(dryRun = false) {
 async function performCleanup(options = {}) {
   const { dryRun = false } = options;
 
-  console.log(`${colors.bright}${colors.red}🧹 Eclaire System Cleanup${colors.reset}`);
+  console.log(`${colors.bright}${colors.red} Eclaire System Cleanup${colors.reset}`);
 
   if (dryRun) {
-    console.log(`${colors.bright}${colors.blue}🔍 DRY RUN MODE - No changes will be made${colors.reset}`);
+    console.log(`${colors.bright}${colors.blue} DRY RUN MODE - No changes will be made${colors.reset}`);
   }
   console.log('');
 
   // Pre-flight warnings
   if (!dryRun) {
-    console.log(`${colors.bright}${colors.yellow}⚠️  IMPORTANT: Before proceeding${colors.reset}`);
+    console.log(`${colors.bright}${colors.yellow}  IMPORTANT: Before proceeding${colors.reset}`);
     console.log(`${colors.yellow}Please stop these services first:${colors.reset}`);
     console.log(`  • Frontend server (pnpm run dev)`);
     console.log(`  • Backend server (pnpm run dev)`);
@@ -344,7 +344,7 @@ async function performCleanup(options = {}) {
     }
 
     // Second confirmation - require exact text
-    console.log(`\n${colors.bright}${colors.red}⚠️  FINAL WARNING ⚠️${colors.reset}`);
+    console.log(`\n${colors.bright}${colors.red}  FINAL WARNING ${colors.reset}`);
     console.log(`${colors.red}This will PERMANENTLY DELETE all the data listed above!${colors.reset}`);
     const confirmation = await askQuestion(`${colors.bright}Type "I AGREE" to confirm deletion: ${colors.reset}`);
 
@@ -354,7 +354,7 @@ async function performCleanup(options = {}) {
     }
   }
 
-  console.log(`\n${colors.bright}${colors.cyan}🚀 Starting cleanup process...${colors.reset}\n`);
+  console.log(`\n${colors.bright}${colors.cyan} Starting cleanup process...${colors.reset}\n`);
 
   let successCount = 0;
   let totalOperations = 4;
@@ -380,22 +380,22 @@ async function performCleanup(options = {}) {
   }
 
   // Summary
-  console.log(`\n${colors.bright}${colors.cyan}📊 Cleanup Summary${colors.reset}`);
+  console.log(`\n${colors.bright}${colors.cyan} Cleanup Summary${colors.reset}`);
 
   if (dryRun) {
-    console.log(`${colors.blue}🔍 Dry run completed - no changes were made${colors.reset}`);
+    console.log(`${colors.blue} Dry run completed - no changes were made${colors.reset}`);
   } else if (successCount === totalOperations) {
-    console.log(`${colors.bright}${colors.green}✅ Cleanup completed successfully!${colors.reset}`);
+    console.log(`${colors.bright}${colors.green} Cleanup completed successfully!${colors.reset}`);
     console.log(`${colors.green}${successCount}/${totalOperations}${colors.reset} operations successful`);
 
     // Post-cleanup reminders
-    console.log(`\n${colors.bright}${colors.yellow}📝 Next Steps:${colors.reset}`);
+    console.log(`\n${colors.bright}${colors.yellow} Next Steps:${colors.reset}`);
     console.log(`${colors.yellow}Don't forget to stop external dependencies:${colors.reset}`);
     console.log(`  • Docker containers: ${colors.cyan}docker stop eclaire-redis eclaire-postgres${colors.reset}`);
     console.log(`  • Or stop all: ${colors.cyan}docker stop $(docker ps -q)${colors.reset}`);
-    console.log(`\n${colors.cyan}💡 To set up a fresh system, run your setup script or restore from backup.${colors.reset}`);
+    console.log(`\n${colors.cyan} To set up a fresh system, run your setup script or restore from backup.${colors.reset}`);
   } else {
-    console.log(`${colors.bright}${colors.red}❌ Cleanup completed with errors${colors.reset}`);
+    console.log(`${colors.bright}${colors.red} Cleanup completed with errors${colors.reset}`);
     console.log(`${colors.red}${successCount}/${totalOperations}${colors.reset} operations successful`);
   }
 
@@ -422,7 +422,7 @@ if (showHelp) {
   console.log('  -h, --help      Show this help message');
   console.log('  --dry-run       Preview what would be deleted without making changes');
   console.log('');
-  console.log(`${colors.bright}${colors.red}⚠️  WARNING: This will permanently delete data!${colors.reset}`);
+  console.log(`${colors.bright}${colors.red}  WARNING: This will permanently delete data!${colors.reset}`);
   console.log(`${colors.yellow}Always stop services first and consider making a backup.${colors.reset}`);
   rl.close();
   process.exit(0);
@@ -435,7 +435,7 @@ if (showHelp) {
     rl.close();
     process.exit(success ? 0 : 1);
   } catch (error) {
-    console.error(`${colors.red}💥 Cleanup failed: ${error.message}${colors.reset}`);
+    console.error(`${colors.red} Cleanup failed: ${error.message}${colors.reset}`);
     rl.close();
     process.exit(1);
   }

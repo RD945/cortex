@@ -58,14 +58,14 @@
     }
   },
   "scripts": {
-    "build": "tsc && cp -r src/migrations dist/",
+    "build": "tsc && shx cp -r src/migrations dist/",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist",
+    "clean": "shx rm -rf dist",
     "db:migrate": "tsx src/scripts/migrate.ts",
     "db:migrate:status": "tsx src/scripts/migrate.ts --status",
     "db:generate": "drizzle-kit generate",
-    "db:generate:pg": "DATABASE_TYPE=postgresql drizzle-kit generate",
-    "db:generate:sqlite": "DATABASE_TYPE=sqlite drizzle-kit generate",
+    "db:generate:pg": "cross-env DATABASE_TYPE=postgresql drizzle-kit generate",
+    "db:generate:sqlite": "cross-env DATABASE_TYPE=sqlite drizzle-kit generate",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
@@ -81,6 +81,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
     "@types/node": "22.10.2",
+    "cross-env": "^10.1.0",
     "drizzle-kit": "0.31.8",
     "tsx": "4.21.0",
     "typescript": "5.9.3"

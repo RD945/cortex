@@ -60,7 +60,7 @@ export function AssetOverviewCards({ stats }: AssetOverviewCardsProps) {
       name: "Documents",
       icon: FileText,
       color: "bg-purple-500",
-      textColor: "text-purple-600 dark:text-purple-400",
+      textColor: "text-purple-600 dark:text-blue-400",
       bgColor: "bg-purple-50",
       darkBgColor: "dark:bg-neutral-900",
       count: stats.assets.documents.count,

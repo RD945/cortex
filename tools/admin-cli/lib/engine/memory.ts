@@ -13,7 +13,7 @@
  * and others use a small sliding window (e.g., 1024 tokens).
  * This dramatically reduces actual KV cache memory:
  *   - Gemma3 at 131K context: Estimated ~20 GB, Actual ~6 GB
- *   - Qwen3 at 40K context: Estimated ~15 GB, Actual ~15 GB (no SWA)
+ *   - Qwen3 1.7B at 32K context: Estimated ~2 GB, Actual ~2 GB (no SWA)
  *
  * Our estimates are conservative (overestimate) for SWA models.
  * For accurate SWA estimation, we would need:
@@ -128,7 +128,7 @@ function estimateKVCacheWithArchitecture(
  * Estimate KV cache using model size as proxy (fallback when architecture unknown)
  *
  * Calibrated against llama.cpp actual usage:
- * - Qwen3-14B at 40960 context: ~6.4 GB KV cache
+ * - Qwen3-1.7B at 32768 context: ~0.5 GB KV cache
  * - 7B model at 32K context: ~3 GB KV cache
  *
  * Uses a higher multiplier (4.5x instead of 3x) to be more conservative.

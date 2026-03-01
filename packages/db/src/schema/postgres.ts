@@ -855,3 +855,21 @@ export const appMeta = pgTable("_app_meta", {
     .notNull()
     .defaultNow(),
 });
+
+// =============================================================================
+// Dashboard Feed Cache (for fast dashboard loads)
+// =============================================================================
+
+export const dashboardCache = pgTable("dashboard_cache", {
+  /** Feed type: finance, news, music, youtube */
+  feedType: text("feed_type").primaryKey(),
+  /** JSON serialized feed data */
+  data: text("data").notNull(),
+  /** When this cache entry was last updated */
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+  /** Cache TTL - when this entry expires */
+  expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" })
+    .notNull(),
+});

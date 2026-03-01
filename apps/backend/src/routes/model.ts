@@ -82,7 +82,7 @@ modelRoutes.get("/list", async (c) => {
       providerModel: model.providerModel,
       capabilities: model.capabilities,
       pricing: model.pricing,
-      isActive: currentModel?.modelId === id,
+      isActive: currentModel?.id === id,
     }));
 
     // Group by provider
@@ -106,7 +106,7 @@ modelRoutes.get("/list", async (c) => {
     return c.json({
       models,
       grouped,
-      current: currentModel?.modelId,
+      current: currentModel?.id,
     });
   } catch (error) {
     logger.error(

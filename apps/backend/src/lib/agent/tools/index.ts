@@ -12,6 +12,8 @@ import { countPhotosTool } from "./count-photos.js";
 import { countTasksTool } from "./count-tasks.js";
 // Create tools
 import { createNoteTool } from "./create-note.js";
+// Dashboard feed tools
+import { getDashboardFeedTool } from "./get-dashboard-feed.js";
 import { findBookmarksTool } from "./find-bookmarks.js";
 import { findDocumentsTool } from "./find-documents.js";
 // Find tools
@@ -39,6 +41,8 @@ export const backendTools = {
   countTasks: countTasksTool,
   // Create tools
   createNote: createNoteTool,
+  // Dashboard feed tools
+  getDashboardFeed: getDashboardFeedTool,
   // Knowledge graph tools
   searchKnowledgeGraph: searchKnowledgeGraphTool,
 };
@@ -49,6 +53,7 @@ export { countNotesTool } from "./count-notes.js";
 export { countPhotosTool } from "./count-photos.js";
 export { countTasksTool } from "./count-tasks.js";
 export { createNoteTool } from "./create-note.js";
+export { getDashboardFeedTool } from "./get-dashboard-feed.js";
 export { findBookmarksTool } from "./find-bookmarks.js";
 export { findDocumentsTool } from "./find-documents.js";
 // Re-export individual tools for direct imports

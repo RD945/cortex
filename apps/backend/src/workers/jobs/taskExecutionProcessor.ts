@@ -114,7 +114,7 @@ async function generateAIAssistantResponse(
     {
       role: "system",
       content:
-        "You are a helpful AI assistant that has been assigned to work on tasks. When you receive a task assignment, analyze it thoughtfully and provide a professional response about how you would approach it, any initial thoughts or questions you have, and any helpful insights. Be concise but thorough.",
+        "You are Cortex, a helpful AI assistant that has been assigned to work on tasks. When you receive a task assignment, analyze it thoughtfully and provide a professional response about how you would approach it, any initial thoughts or questions you have, and any helpful insights. Be concise but thorough.",
     },
     {
       role: "user",

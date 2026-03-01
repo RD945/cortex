@@ -28,25 +28,25 @@ const platformInfo = {
   telegram: {
     name: "Telegram",
     description: "Receive notifications and chat via Telegram Bot",
-    icon: "📱",
+    icon: "",
     available: true,
   },
   slack: {
     name: "Slack",
     description: "Send notifications to Slack channels",
-    icon: "💬",
+    icon: "",
     available: false, // Not implemented yet
   },
   whatsapp: {
     name: "WhatsApp",
     description: "Send notifications via WhatsApp Business API",
-    icon: "💚",
+    icon: "",
     available: false, // Not implemented yet
   },
   email: {
     name: "Email",
     description: "Send email notifications",
-    icon: "📧",
+    icon: "",
     available: false, // Not implemented yet
   },
 } as const;

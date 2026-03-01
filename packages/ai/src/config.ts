@@ -444,7 +444,7 @@ export function getProviderConfig(providerId: string): ProviderConfig | null {
 
 /**
  * Parse a model ID in "provider:model" format
- * @example parseModelId("local-llama:qwen3-14b-q4") => { provider: "local-llama", model: "qwen3-14b-q4" }
+ * @example parseModelId("local-llama:qwen3-1.7b-q4") => { provider: "local-llama", model: "qwen3-1.7b-q4" }
  */
 export function parseModelId(id: string): { provider: string; model: string } {
   const colonIndex = id.indexOf(":");
@@ -470,7 +470,7 @@ export function isValidModelIdFormat(id: string): boolean {
 
 /**
  * Create a model ID from provider and model parts
- * @example createModelId("local-llama", "qwen3-14b-q4") => "local-llama:qwen3-14b-q4"
+ * @example createModelId("local-llama", "qwen3-1.7b-q4") => "local-llama:qwen3-1.7b-q4"
  */
 export function createModelId(provider: string, model: string): string {
   if (!provider || !model) {

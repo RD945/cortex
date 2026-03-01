@@ -174,7 +174,7 @@ describe("Documents API Integration Tests", () => {
     expect(createdDocumentId).not.toBeNull();
 
     console.log(
-      `✅ Document created successfully with ID: ${createdDocumentId}`,
+      ` Document created successfully with ID: ${createdDocumentId}`,
     );
   }, 15000); // Increase timeout slightly for potential file handling
 

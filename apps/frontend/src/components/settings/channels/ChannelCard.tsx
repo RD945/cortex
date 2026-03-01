@@ -46,22 +46,22 @@ interface ChannelCardProps {
 // Platform icons and colors
 const platformConfig = {
   telegram: {
-    icon: "📱",
+    icon: "",
     color: "bg-blue-500",
     name: "Telegram",
   },
   slack: {
-    icon: "💬",
+    icon: "",
     color: "bg-purple-500",
     name: "Slack",
   },
   whatsapp: {
-    icon: "💚",
+    icon: "",
     color: "bg-green-500",
     name: "WhatsApp",
   },
   email: {
-    icon: "📧",
+    icon: "",
     color: "bg-orange-500",
     name: "Email",
   },

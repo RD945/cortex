@@ -58,6 +58,9 @@
     "app:upgrade": "pnpm --filter @cortex/backend app:upgrade",
     "app:upgrade-check": "pnpm --filter @cortex/backend app:upgrade-check",
     "cli": "pnpm --filter @cortex/cli exec tsx main.ts",
-    "cortex": "pnpm --filter @cortex/cli exec tsx main.ts"
+    "cortex": "pnpm --filter @cortex/cli exec tsx main.ts",
+    "seed:demo": "pnpm --filter @cortex/backend seed:demo",
+    "seed:graphiti": "pnpm --filter @cortex/backend seed:graphiti",
+    "seed:all": "pnpm --filter @cortex/backend seed:all"
   }
 }

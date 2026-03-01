@@ -29,7 +29,7 @@ async function selectFromList(prompt, options, defaultIndex = 0) {
 
       options.forEach((option, index) => {
         const isSelected = index === selectedIndex;
-        const prefix = isSelected ? `${colors.cyan}❯${colors.reset}` : ' ';
+        const prefix = isSelected ? `${colors.cyan}${colors.reset}` : ' ';
         const text = isSelected ? `${colors.cyan}${option.label}${colors.reset}` : option.label;
         const desc = option.description ? ` ${colors.yellow}(${option.description})${colors.reset}` : '';
         console.log(`  ${prefix} ${text}${desc}`);
@@ -39,7 +39,7 @@ async function selectFromList(prompt, options, defaultIndex = 0) {
     console.log(prompt);
     options.forEach((option, index) => {
       const isSelected = index === selectedIndex;
-      const prefix = isSelected ? `${colors.cyan}❯${colors.reset}` : ' ';
+      const prefix = isSelected ? `${colors.cyan}${colors.reset}` : ' ';
       const text = isSelected ? `${colors.cyan}${option.label}${colors.reset}` : option.label;
       const desc = option.description ? ` ${colors.yellow}(${option.description})${colors.reset}` : '';
       console.log(`  ${prefix} ${text}${desc}`);
@@ -97,7 +97,7 @@ async function configureDatabaseInEnv(databaseType, questionFn) {
   const envPath = path.join(process.cwd(), '.env');
 
   if (!fs.existsSync(envPath)) {
-    console.log(`  ${colors.yellow}⚠️  .env file not found, skipping database configuration${colors.reset}`);
+    console.log(`  ${colors.yellow}  .env file not found, skipping database configuration${colors.reset}`);
     return;
   }
 
@@ -110,7 +110,7 @@ async function configureDatabaseInEnv(databaseType, questionFn) {
       'DATABASE_TYPE=postgres'
     );
     fs.writeFileSync(envPath, content);
-    console.log(`  ✅ Configured DATABASE_TYPE=postgres in .env`);
+    console.log(`   Configured DATABASE_TYPE=postgres in .env`);
 
     // Offer to start PostgreSQL via Docker Compose
     console.log(`\n  ${colors.cyan}PostgreSQL Setup${colors.reset}`);
@@ -121,10 +121,10 @@ async function configureDatabaseInEnv(databaseType, questionFn) {
       // Use compose.dev.yaml overlay to expose Postgres port to host
       const result = exec('docker compose -f compose.yaml -f compose.dev.yaml up postgres docling -d', true);
       if (result.success) {
-        console.log(`  ${colors.green}✅ PostgreSQL and Docling started${colors.reset}`);
+        console.log(`  ${colors.green} PostgreSQL and Docling started${colors.reset}`);
         console.log(`  ${colors.cyan}Check status with: docker compose ps${colors.reset}`);
       } else {
-        console.log(`  ${colors.red}❌ Failed to start Docker Compose${colors.reset}`);
+        console.log(`  ${colors.red} Failed to start Docker Compose${colors.reset}`);
         console.log(`  ${colors.cyan}Try manually: docker compose -f compose.yaml -f compose.dev.yaml up postgres docling -d${colors.reset}`);
       }
     } else {
@@ -143,7 +143,7 @@ async function configureDatabaseInEnv(databaseType, questionFn) {
       'QUEUE_BACKEND=sqlite'
     );
     fs.writeFileSync(envPath, content);
-    console.log(`  ✅ Configured DATABASE_TYPE=sqlite and QUEUE_BACKEND=sqlite in .env`);
+    console.log(`   Configured DATABASE_TYPE=sqlite and QUEUE_BACKEND=sqlite in .env`);
   }
 }
 
@@ -312,7 +312,7 @@ async function checkDependencies() {
 
   for (const dep of deps) {
     const result = dep.check();
-    const icon = result.exists ? '✅' : (dep.optional ? '⚠️ ' : '❌');
+    const icon = result.exists ? '' : (dep.optional ? ' ' : '');
     const status = result.exists ? colors.green : (dep.optional ? colors.yellow : colors.red);
 
     console.log(`  ${icon} ${dep.name}: ${status}${result.version}${colors.reset}`);
@@ -394,12 +394,12 @@ async function copyEnvFiles(force = false) {
     const destPath = path.join(process.cwd(), file.dest);
 
     if (!fs.existsSync(sourcePath)) {
-      console.log(`  ❌ Source file not found: ${file.source}`);
+      console.log(`   Source file not found: ${file.source}`);
       continue;
     }
 
     if (fs.existsSync(destPath) && !force) {
-      console.log(`  ⏭️  File already exists: ${file.dest}`);
+      console.log(`    File already exists: ${file.dest}`);
       skippedCount++;
       continue;
     }
@@ -409,7 +409,7 @@ async function copyEnvFiles(force = false) {
 
       // Generate secure values for .env
       if (file.generateSecrets) {
-        console.log(`  🔐 Generating secure values...`);
+        console.log(`   Generating secure values...`);
 
         const betterAuthSecret = generateSecureValue(32);
         const masterEncryptionKey = generateSecureValue(32);
@@ -428,16 +428,16 @@ async function copyEnvFiles(force = false) {
           `API_KEY_HMAC_KEY_V1=${apiKeyHmacSecret}`
         );
 
-        console.log(`  ✅ Generated BETTER_AUTH_SECRET`);
-        console.log(`  ✅ Generated MASTER_ENCRYPTION_KEY`);
-        console.log(`  ✅ Generated API_KEY_HMAC_KEY_V1`);
+        console.log(`   Generated BETTER_AUTH_SECRET`);
+        console.log(`   Generated MASTER_ENCRYPTION_KEY`);
+        console.log(`   Generated API_KEY_HMAC_KEY_V1`);
       }
 
       fs.writeFileSync(destPath, content);
-      console.log(`  ✅ Copied: ${file.source} → ${file.dest}`);
+      console.log(`   Copied: ${file.source} → ${file.dest}`);
       copiedCount++;
     } catch (error) {
-      console.log(`  ❌ Failed to copy ${file.source}: ${error.message}`);
+      console.log(`   Failed to copy ${file.source}: ${error.message}`);
     }
   }
 
@@ -466,15 +466,15 @@ async function createDataDirectories() {
     const dirPath = path.join(process.cwd(), dir);
 
     if (fs.existsSync(dirPath)) {
-      console.log(`  ✓ Directory exists: ${dir}`);
+      console.log(`   Directory exists: ${dir}`);
       existingCount++;
     } else {
       try {
         fs.mkdirSync(dirPath, { recursive: true });
-        console.log(`  ✅ Created directory: ${dir}`);
+        console.log(`   Created directory: ${dir}`);
         createdCount++;
       } catch (error) {
-        console.log(`  ❌ Failed to create ${dir}: ${error.message}`);
+        console.log(`   Failed to create ${dir}: ${error.message}`);
       }
     }
   }
@@ -489,23 +489,23 @@ async function checkModels() {
   console.log('  =====================');
 
   console.log(`\n  ${colors.cyan}Models will be downloaded automatically when starting dependencies.${colors.reset}`);
-  console.log(`  ${colors.yellow}⏰ Model downloads may take 5-10 minutes on first start${colors.reset}`);
+  console.log(`  ${colors.yellow} Model downloads may take 5-10 minutes on first start${colors.reset}`);
 
   console.log('\n  Required models:');
-  console.log('    • Backend model:  unsloth/Qwen3-14B-GGUF:Q4_K_XL');
+  console.log('    • Backend model:  unsloth/Qwen3-1.7B-GGUF:Q4_K_XL');
   console.log('    • Workers model:  unsloth/gemma-3-4b-it-qat-GGUF:Q4_K_XL');
 
   // Check if llama-server is available
   if (!commandExists('llama-server')) {
-    console.log(`\n  ${colors.yellow}⚠️  llama-server not found - models cannot be used${colors.reset}`);
+    console.log(`\n  ${colors.yellow}  llama-server not found - models cannot be used${colors.reset}`);
     console.log(`  ${colors.cyan}Install llama.cpp to enable AI models${colors.reset}`);
     return false;
   }
 
-  console.log(`\n  ${colors.green}✅ llama-server found${colors.reset}`);
+  console.log(`\n  ${colors.green} llama-server found${colors.reset}`);
 
   console.log('\n  To start LLM servers (in separate terminals):');
-  console.log(`    ${colors.cyan}llama-server -hf unsloth/Qwen3-14B-GGUF:Q4_K_XL --ctx-size 16384 --port 11500${colors.reset}`);
+  console.log(`    ${colors.cyan}llama-server -hf unsloth/Qwen3-1.7B-GGUF:Q4_K_XL --ctx-size 16384 --port 11500${colors.reset}`);
   console.log(`    ${colors.cyan}llama-server -hf unsloth/gemma-3-4b-it-qat-GGUF:Q4_K_XL --ctx-size 16384 --port 11501${colors.reset}`);
   console.log(`    ${colors.yellow}(Models download automatically on first run)${colors.reset}`);
 
@@ -519,22 +519,22 @@ async function installDependencies() {
   const result = exec('pnpm install', true);
 
   if (!result.success) {
-    console.log(`\n  ${colors.red}❌ Failed to install dependencies${colors.reset}`);
+    console.log(`\n  ${colors.red} Failed to install dependencies${colors.reset}`);
     console.log(`     Error: ${result.error}`);
     console.log(`  ${colors.cyan}Try running manually: pnpm install${colors.reset}`);
     return false;
   }
 
-  console.log(`\n  ${colors.green}✅ All dependencies installed successfully${colors.reset}`);
+  console.log(`\n  ${colors.green} All dependencies installed successfully${colors.reset}`);
 
   // Install patchright browsers for backend
   console.log('\n  Installing Patchright browsers for backend...');
   const patchrightResult = exec('cd apps/backend && pnpm dlx patchright install chromium', true);
 
   if (patchrightResult.success) {
-    console.log(`  ✅ Patchright browsers installed successfully`);
+    console.log(`   Patchright browsers installed successfully`);
   } else {
-    console.log(`  ${colors.yellow}⚠️  Patchright browser installation failed${colors.reset}`);
+    console.log(`  ${colors.yellow}  Patchright browser installation failed${colors.reset}`);
     console.log(`     ${colors.cyan}Run manually: cd apps/backend && pnpm dlx patchright install chromium${colors.reset}`);
     console.log(`     This is needed for web scraping functionality`);
   }
@@ -550,12 +550,12 @@ async function initDatabase(databaseType = 'postgres') {
 
     const pgCheck = exec('docker ps | grep eclaire-postgres', true);
     if (!pgCheck.success) {
-      console.log(`  ${colors.yellow}⚠️  PostgreSQL is not running${colors.reset}`);
+      console.log(`  ${colors.yellow}  PostgreSQL is not running${colors.reset}`);
       console.log(`  ${colors.cyan}Start with: docker compose -f compose.yaml -f compose.dev.yaml up postgres -d${colors.reset}`);
       return false;
     }
 
-    console.log('  ✓ PostgreSQL is running');
+    console.log('   PostgreSQL is running');
   } else {
     console.log('\n  Using SQLite database (no external dependencies needed)');
   }
@@ -565,11 +565,11 @@ async function initDatabase(databaseType = 'postgres') {
   const upgradeResult = exec('pnpm app:upgrade');
 
   if (!upgradeResult.success) {
-    console.log(`  ${colors.red}❌ Upgrade failed${colors.reset}`);
+    console.log(`  ${colors.red} Upgrade failed${colors.reset}`);
     return false;
   }
 
-  console.log(`  ${colors.green}✅ Database initialized successfully${colors.reset}`);
+  console.log(`  ${colors.green} Database initialized successfully${colors.reset}`);
   return true;
 }
 
@@ -579,11 +579,11 @@ async function seedDemoData() {
   const seedResult = exec('pnpm --filter @eclaire/backend db:seed:demo');
 
   if (!seedResult.success) {
-    console.log(`  ${colors.red}❌ Demo seeding failed${colors.reset}`);
+    console.log(`  ${colors.red} Demo seeding failed${colors.reset}`);
     return false;
   }
 
-  console.log(`  ${colors.green}✅ Demo data seeded successfully${colors.reset}`);
+  console.log(`  ${colors.green} Demo data seeded successfully${colors.reset}`);
   return true;
 }
 
@@ -616,17 +616,17 @@ function printSummary(results) {
     let icon, status, statusText;
 
     if (failed) {
-      icon = '❌';
+      icon = '';
       status = colors.red;
       statusText = 'Failed';
       hasFailures = true;
     } else if (result) {
-      icon = '✅';
+      icon = '';
       status = colors.green;
       statusText = 'Complete';
       hasSuccesses = true;
     } else {
-      icon = '⏭️';
+      icon = '';
       status = colors.yellow;
       statusText = 'Skipped';
     }
@@ -636,10 +636,10 @@ function printSummary(results) {
 
   // Overall status
   if (hasFailures) {
-    console.log(`\n${colors.red}⚠️  Setup completed with errors!${colors.reset}`);
+    console.log(`\n${colors.red}  Setup completed with errors!${colors.reset}`);
     console.log(`${colors.yellow}Some steps failed. Please review the errors above and try again.${colors.reset}`);
   } else if (hasSuccesses) {
-    console.log(`\n${colors.green}✨ Setup complete!${colors.reset}`);
+    console.log(`\n${colors.green} Setup complete!${colors.reset}`);
   } else {
     console.log(`\n${colors.yellow}Setup completed (most steps were skipped)${colors.reset}`);
   }
@@ -650,7 +650,7 @@ function printSummary(results) {
   }
 
   console.log('\nNext steps:');
-  console.log(`  🚀 ${colors.green}Your development environment is ready!${colors.reset}`);
+  console.log(`   ${colors.green}Your development environment is ready!${colors.reset}`);
   console.log('');
   console.log(`  To start the application:`);
   console.log(`     ${colors.cyan}pnpm dev${colors.reset}`);

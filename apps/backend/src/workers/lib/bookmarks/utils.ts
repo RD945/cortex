@@ -349,7 +349,7 @@ export async function generateBookmarkTags(
       {
         role: "system",
         content:
-          "You are a helpful assistant that analyzes web content and generates relevant tags. Always respond with a JSON array of strings.",
+          "You are Cortex, a helpful assistant that analyzes web content and generates relevant tags. Always respond with a JSON array of strings.",
       },
       {
         role: "user",

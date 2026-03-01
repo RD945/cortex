@@ -1,9 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { FolderOpen, MessageSquare, Settings } from "lucide-react";
+import { FolderOpen, Home, MessageSquare, Settings } from "lucide-react";
 import { useDueNowCount } from "@/hooks/use-due-now-count";
 import { cn } from "@/lib/utils";
 
-export type MobileTab = "chat" | "folders" | "settings";
+export type MobileTab = "home" | "chat" | "folders" | "settings";
 
 interface MobileTabBarProps {
   activeTab: MobileTab;
@@ -32,6 +32,12 @@ export function MobileTabBar({
   };
 
   const tabs = [
+    {
+      id: "home" as MobileTab,
+      label: "Home",
+      icon: Home,
+      href: "/dashboard",
+    },
     {
       id: "chat" as MobileTab,
       label: "Chat",

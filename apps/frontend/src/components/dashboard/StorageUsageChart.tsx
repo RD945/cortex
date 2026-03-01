@@ -55,7 +55,7 @@ interface StorageUsageChartProps {
 
 const COLORS = {
   bookmarks: "#3b82f6", // blue
-  documents: "#8b5cf6", // purple
+  documents: "#3b82f6", // blue
   photos: "#22c55e", // green
   notes: "#eab308", // yellow
   tasks: "#ef4444", // red

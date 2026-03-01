@@ -57,7 +57,7 @@ export function initConfig(): CortexConfig {
 
   // Log warnings
   if (warnings.length > 0) {
-    console.log("\n⚠️  Configuration Warnings:");
+    console.log("\n  Configuration Warnings:");
     for (const warning of warnings) {
       console.log(`   - ${warning}`);
     }

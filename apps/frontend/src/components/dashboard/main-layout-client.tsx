@@ -61,7 +61,7 @@ import { convertToToolCallSummary } from "@/types/message";
 import packageJson from "../../../package.json";
 
 function convertBackendMessage(msg: BackendMessage): Message {
-  console.log("🔄 Converting backend message:", {
+  console.log(" Converting backend message:", {
     id: msg.id,
     role: msg.role,
     content: msg.content,
@@ -81,7 +81,7 @@ function convertBackendMessage(msg: BackendMessage): Message {
     toolCalls: msg.toolCalls,
   };
 
-  console.log("✅ Converted message:", converted);
+  console.log(" Converted message:", converted);
   return converted;
 }
 
@@ -123,7 +123,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
   const _resizeRef = useRef<HTMLDivElement>(null);
 
   // Mobile state
-  const [currentMobileTab, setCurrentMobileTab] = useState<MobileTab>("chat");
+  const [currentMobileTab, setCurrentMobileTab] = useState<MobileTab>("home");
   const [foldersSheetOpen, setFoldersSheetOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
 
@@ -184,9 +184,9 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
         setStreamingText((prev) => {
           const newText = prev + chunksToFlush;
           console.log(
-            `🔄 Batched update: "${prev}" + "${chunksToFlush}" = "${newText}"`,
+            ` Batched update: "${prev}" + "${chunksToFlush}" = "${newText}"`,
           );
-          console.log(`📊 streamingText length: ${newText.length} chars`);
+          console.log(` streamingText length: ${newText.length} chars`);
           return newText;
         });
       });
@@ -227,7 +227,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
   // Initialize streaming client
   const streamingClient = useStreamingClient({
     onThought: (content: string, _timestamp?: string) => {
-      console.log("💭 Received thought:", content);
+      console.log(" Received thought:", content);
       setStreamingThought((prev) => prev + content);
     },
     onToolCall: (
@@ -237,7 +237,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
       result?: unknown,
       error?: string,
     ) => {
-      console.log("🔧 Received tool call:", name, status, {
+      console.log(" Received tool call:", name, status, {
         args,
         result,
         error,
@@ -245,12 +245,12 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
       addOrUpdateTool(name, status, args, result, error);
     },
     onTextChunk: (content: string, _timestamp?: string) => {
-      console.log("📝 Received text chunk:", content);
+      console.log(" Received text chunk:", content);
       finalStreamingTextRef.current += content; // <-- UPDATE THE REF IMMEDIATELY
       processBatchedChunk(content);
     },
     onError: (error: string, _timestamp?: string) => {
-      console.error("❌ Streaming error received:", error);
+      console.error(" Streaming error received:", error);
       setIsStreaming(false);
       // Add error message to conversation
       const errorMessage: Message = {
@@ -268,7 +268,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
       totalTokens?: number,
       executionTimeMs?: number,
     ) => {
-      console.log("🏁 Streaming completed:", {
+      console.log(" Streaming completed:", {
         requestId,
         conversationId,
         totalTokens,
@@ -360,10 +360,10 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
       clearTools();
     },
     onConnect: () => {
-      console.log("🔌 Streaming connected");
+      console.log(" Streaming connected");
     },
     onDisconnect: () => {
-      console.log("🔌 Streaming disconnected");
+      console.log(" Streaming disconnected");
       // Don't set isStreaming=false here - let onDone or onError handle it
       // This prevents premature clearing of loading state
     },
@@ -485,18 +485,18 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
 
   // Conversation management functions
   const loadConversation = async (conversation: ConversationSummary) => {
-    console.log("🔄 Loading conversation:", conversation.id);
+    console.log(" Loading conversation:", conversation.id);
     setIsLoadingConversation(true);
     try {
       const conversationWithMessages = await getConversationWithMessages(
         conversation.id,
       );
       console.log(
-        "📨 API response messages:",
+        " API response messages:",
         conversationWithMessages.messages,
       );
       console.log(
-        "📊 Message count:",
+        " Message count:",
         conversationWithMessages.messages.length,
       );
 
@@ -504,7 +504,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
       const convertedMessages = conversationWithMessages.messages.map(
         convertBackendMessage,
       );
-      console.log("🔄 All converted messages:", convertedMessages);
+      console.log(" All converted messages:", convertedMessages);
 
       setMessages(convertedMessages);
       setAttachedAssets([]);
@@ -747,11 +747,11 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
 
     // Wait for preferences to be loaded to ensure correct enableThinking value
     if (!preferencesLoaded) {
-      console.log("⏳ Waiting for preferences to load before sending message");
+      console.log(" Waiting for preferences to load before sending message");
       return;
     }
 
-    console.log("💬 Starting message send:", input);
+    console.log(" Starting message send:", input);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -766,13 +766,13 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
     // Check if streaming is enabled in preferences
     const useStreaming = assistantPreferences.streamingEnabled;
     console.log(
-      `🔄 Using ${useStreaming ? "streaming" : "non-streaming"} mode`,
+      ` Using ${useStreaming ? "streaming" : "non-streaming"} mode`,
     );
 
     // Set loading state immediately for instant user feedback
     // Use flushSync to ensure immediate re-render
     if (useStreaming) {
-      console.log("🔄 Setting isStreaming=true for immediate feedback");
+      console.log(" Setting isStreaming=true for immediate feedback");
       flushSync(() => {
         setIsStreaming(true);
         setStreamingThought("");
@@ -782,15 +782,15 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
       });
       clearTools();
       console.log(
-        "✅ Streaming state set with flushSync, should show loading indicator",
+        " Streaming state set with flushSync, should show loading indicator",
       );
     } else {
-      console.log("🔄 Setting isLoading=true for immediate feedback");
+      console.log(" Setting isLoading=true for immediate feedback");
       flushSync(() => {
         setIsLoading(true);
       });
       console.log(
-        "✅ Loading state set with flushSync, should show loading indicator",
+        " Loading state set with flushSync, should show loading indicator",
       );
     }
 
@@ -807,7 +807,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
         if (currentConversation) {
           streamingRequest.conversationId = currentConversation.id;
           console.log(
-            "📝 Using existing conversation:",
+            " Using existing conversation:",
             currentConversation.id,
           );
         }
@@ -820,14 +820,14 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
               id: asset.id,
             })),
           };
-          console.log("📎 Attached assets:", attachedAssets.length);
+          console.log(" Attached assets:", attachedAssets.length);
         }
 
-        console.log("🚀 Starting streaming request:", streamingRequest);
+        console.log(" Starting streaming request:", streamingRequest);
         await streamingClient.startStream?.(streamingRequest);
-        console.log("✅ Streaming request initiated");
+        console.log(" Streaming request initiated");
       } catch (error) {
-        console.error("❌ Streaming error:", error);
+        console.error(" Streaming error:", error);
         setIsStreaming(false);
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -852,7 +852,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
         if (currentConversation) {
           promptRequest.conversationId = currentConversation.id;
           console.log(
-            "📝 Using existing conversation:",
+            " Using existing conversation:",
             currentConversation.id,
           );
         }
@@ -865,15 +865,15 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
               id: asset.id,
             })),
           };
-          console.log("📎 Attached assets:", attachedAssets.length);
+          console.log(" Attached assets:", attachedAssets.length);
         }
 
         console.log(
-          "🚀 Starting non-streaming request to /api/prompt:",
+          " Starting non-streaming request to /api/prompt:",
           promptRequest,
         );
         const response = await sendPrompt(promptRequest);
-        console.log("✅ Non-streaming response received:", response);
+        console.log(" Non-streaming response received:", response);
 
         // Create assistant message with thinking content
         const assistantMessage: Message = {
@@ -924,7 +924,7 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
             });
         }
       } catch (error) {
-        console.error("❌ Non-streaming error:", error);
+        console.error(" Non-streaming error:", error);
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
@@ -1172,8 +1172,8 @@ export function MainLayoutClient({ children }: MainLayoutClientProps) {
         </div>
 
         {/* Middle Content */}
-        <div className="flex-1 overflow-y-auto">
-          <main className="p-6">{children}</main>
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <main className="p-6 pb-0">{children}</main>
         </div>
 
         {/* Right Sidebar (Assistant) - conditionally rendered only when not in full-screen */}

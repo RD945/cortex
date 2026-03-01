@@ -31,7 +31,7 @@ const cookieUtils = {
       sessionCookies = cookieValues.join("; ");
 
       if (VERBOSE) {
-        console.log("🍪 Stored cookies:", sessionCookies);
+        console.log(" Stored cookies:", sessionCookies);
       }
     }
   },
@@ -43,7 +43,7 @@ const cookieUtils = {
   clearCookies: () => {
     sessionCookies = null;
     if (VERBOSE) {
-      console.log("🧹 Cleared stored cookies");
+      console.log(" Cleared stored cookies");
     }
   },
 };
@@ -112,13 +112,13 @@ describe("Better Auth Session Integration Tests", () => {
   beforeAll(async () => {
     // Clear any existing cookies before starting tests
     cookieUtils.clearCookies();
-    console.log("🧪 Starting Better Auth integration tests...");
+    console.log(" Starting Better Auth integration tests...");
   });
 
   afterAll(async () => {
     // Clean up after all tests
     cookieUtils.clearCookies();
-    console.log("✅ Better Auth integration tests completed");
+    console.log(" Better Auth integration tests completed");
   });
 
   it("POST /api/auth/sign-in/email - should authenticate with demo user credentials", async () => {
@@ -149,7 +149,7 @@ describe("Better Auth Session Integration Tests", () => {
     // Note: actual cookie name might be different, let's just check we have cookies
     expect(sessionCookies?.length || 0).toBeGreaterThan(0);
 
-    console.log("✅ Successfully signed in with demo user");
+    console.log(" Successfully signed in with demo user");
   });
 
   it("GET /api/auth/get-session - should retrieve current session information", async () => {
@@ -178,7 +178,7 @@ describe("Better Auth Session Integration Tests", () => {
     expect(data.session.createdAt).toBeTypeOf("string");
     expect(data.session.updatedAt).toBeTypeOf("string");
 
-    console.log("✅ Successfully retrieved session information");
+    console.log(" Successfully retrieved session information");
   });
 
   it("GET /api/bookmarks - should access authenticated API with session", async () => {
@@ -193,7 +193,7 @@ describe("Better Auth Session Integration Tests", () => {
 
     // Debug: Log the response details if it's not 200
     if (response.status !== 200) {
-      console.log(`❌ GET /api/bookmarks returned ${response.status}`);
+      console.log(` GET /api/bookmarks returned ${response.status}`);
       console.log("Current cookies:", sessionCookies);
 
       // Clone response to read error without consuming it
@@ -235,11 +235,11 @@ describe("Better Auth Session Integration Tests", () => {
       }
 
       console.log(
-        `✅ Successfully accessed authenticated API - found ${data.length} bookmarks`,
+        ` Successfully accessed authenticated API - found ${data.length} bookmarks`,
       );
     } else {
       console.log(
-        "✅ Successfully accessed authenticated API - no bookmarks found (empty array)",
+        " Successfully accessed authenticated API - no bookmarks found (empty array)",
       );
     }
   });
@@ -277,7 +277,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.userId).toBeTypeOf("string");
     }
 
-    console.log("✅ Successfully created bookmark with authenticated session");
+    console.log(" Successfully created bookmark with authenticated session");
   });
 
   it("GET /api/auth/get-session - should still have valid session after API calls", async () => {
@@ -295,7 +295,7 @@ describe("Better Auth Session Integration Tests", () => {
     expect(data.session).toBeDefined();
     expect(data.user.email).toBe(DEMO_EMAIL);
 
-    console.log("✅ Session remains valid after authenticated API calls");
+    console.log(" Session remains valid after authenticated API calls");
   });
 
   it("POST /api/auth/sign-out - should successfully sign out and clear session", async () => {
@@ -315,7 +315,7 @@ describe("Better Auth Session Integration Tests", () => {
     // Clear our stored cookies since we signed out
     cookieUtils.clearCookies();
 
-    console.log("✅ Successfully signed out");
+    console.log(" Successfully signed out");
   });
 
   it("GET /api/auth/get-session - should fail to get session after logout", async () => {
@@ -340,7 +340,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.session).toBeUndefined();
     }
 
-    console.log("✅ Confirmed session cleared after logout");
+    console.log(" Confirmed session cleared after logout");
   });
 
   it("GET /api/bookmarks - should fail to access authenticated API without session", async () => {
@@ -357,7 +357,7 @@ describe("Better Auth Session Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Confirmed authenticated API access denied without session");
+    console.log(" Confirmed authenticated API access denied without session");
   });
 
   // Security Tests - Account Enumeration Protection
@@ -404,7 +404,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(nonExistentData.message).toBe("Invalid email or password");
       expect(wrongPasswordData.message).toBe("Invalid email or password");
 
-      console.log("✅ Account enumeration protection verified");
+      console.log(" Account enumeration protection verified");
     });
   });
 
@@ -439,7 +439,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.user.email).toBe("demo@example.com");
 
       console.log(
-        "⚠️  CSRF protection finding - untrusted origin was accepted (consider additional CSRF measures)",
+        "  CSRF protection finding - untrusted origin was accepted (consider additional CSRF measures)",
       );
     });
 
@@ -465,7 +465,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.user).toBeDefined();
       expect(data.user.email).toBe(DEMO_EMAIL);
 
-      console.log("✅ CSRF protection verified - trusted origin accepted");
+      console.log(" CSRF protection verified - trusted origin accepted");
     });
   });
 
@@ -497,7 +497,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.token).toBeTypeOf("string");
       expect(sessionCookies).not.toBeNull();
 
-      console.log("✅ User registration successful");
+      console.log(" User registration successful");
     });
 
     it("POST /api/auth/sign-up/email - should fail when registering with existing email", async () => {
@@ -516,7 +516,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.code).toBe("USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL");
       expect(data.message).toBe("User already exists. Use another email.");
 
-      console.log("✅ Duplicate email registration properly rejected");
+      console.log(" Duplicate email registration properly rejected");
     });
 
     it("POST /api/auth/sign-up/email - should fail with invalid email format", async () => {
@@ -538,7 +538,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.code).toBe("INVALID_EMAIL");
       expect(data.message).toBe("Invalid email");
 
-      console.log("✅ Invalid email format properly rejected");
+      console.log(" Invalid email format properly rejected");
     });
 
     it("POST /api/auth/sign-up/email - should fail with weak password", async () => {
@@ -560,7 +560,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(data.code).toBeDefined();
       expect(data.message).toBeDefined();
 
-      console.log("✅ Weak password properly rejected");
+      console.log(" Weak password properly rejected");
     });
   });
 
@@ -583,7 +583,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(response.status).toBe(404);
 
       console.log(
-        "✅ Password reset endpoint not configured (404 as expected)",
+        " Password reset endpoint not configured (404 as expected)",
       );
     });
 
@@ -604,7 +604,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(response.status).toBe(404);
 
       console.log(
-        "✅ Password reset endpoint consistently returns 404 (not configured)",
+        " Password reset endpoint consistently returns 404 (not configured)",
       );
     });
   });
@@ -648,7 +648,7 @@ describe("Better Auth Session Integration Tests", () => {
       const changeData = (await changeResponse.json()) as any;
       expect(changeData.status).toBe(true);
 
-      console.log("✅ Password changed successfully");
+      console.log(" Password changed successfully");
 
       // Verify: sign out and sign back in with new password
       await loggedFetch(`${BASE_URL}/auth/sign-out`, {
@@ -669,7 +669,7 @@ describe("Better Auth Session Integration Tests", () => {
       );
 
       expect(signInResponse.status).toBe(200);
-      console.log("✅ Successfully signed in with new password");
+      console.log(" Successfully signed in with new password");
     });
 
     it("POST /api/auth/change-password - should fail with wrong current password", async () => {
@@ -706,7 +706,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(changeData.code).toBe("INVALID_PASSWORD");
 
       console.log(
-        "✅ Password change correctly rejected with wrong current password",
+        " Password change correctly rejected with wrong current password",
       );
     });
 
@@ -728,7 +728,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(changeResponse.status).toBe(401);
 
       console.log(
-        "✅ Password change correctly rejected when not authenticated",
+        " Password change correctly rejected when not authenticated",
       );
     });
   });
@@ -764,7 +764,7 @@ describe("Better Auth Session Integration Tests", () => {
 
       expect(deleteResponse.status).toBe(200);
 
-      console.log("✅ User deleted successfully");
+      console.log(" User deleted successfully");
 
       // Verify: user can no longer sign in
       cookieUtils.clearCookies();
@@ -781,7 +781,7 @@ describe("Better Auth Session Integration Tests", () => {
       );
 
       expect(signInResponse.status).toBe(401);
-      console.log("✅ Deleted user can no longer sign in");
+      console.log(" Deleted user can no longer sign in");
     });
 
     it("POST /api/auth/delete-user - should fail with wrong password", async () => {
@@ -815,7 +815,7 @@ describe("Better Auth Session Integration Tests", () => {
       const deleteData = (await deleteResponse.json()) as any;
       expect(deleteData.code).toBe("INVALID_PASSWORD");
 
-      console.log("✅ Account deletion correctly rejected with wrong password");
+      console.log(" Account deletion correctly rejected with wrong password");
 
       // Clean up: delete the user with correct password
       await loggedFetch(`${BASE_URL}/auth/delete-user`, {
@@ -839,7 +839,7 @@ describe("Better Auth Session Integration Tests", () => {
       expect(deleteResponse.status).toBe(401);
 
       console.log(
-        "✅ Account deletion correctly rejected when not authenticated",
+        " Account deletion correctly rejected when not authenticated",
       );
     });
   });

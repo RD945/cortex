@@ -4,6 +4,7 @@ import { Upload, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { QRCodeDisplay } from "@/components/auth/qr-code-display";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -64,6 +65,61 @@ const profileFormSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+/**
+ * QR Login section: generates a dedicated API key and displays it as a QR code
+ * that can be scanned on a mobile device for passwordless login.
+ */
+function QRLoginSection() {
+  const [qrApiKey, setQrApiKey] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
+
+  const generateQRKey = async () => {
+    setIsGenerating(true);
+    try {
+      const res = await apiFetch("/api/user/api-keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "Mobile QR Login" }),
+      });
+      if (!res.ok) throw new Error("Failed to create API key");
+      const data = await res.json();
+      setQrApiKey(data.apiKey.key);
+      toast({ title: "QR login code generated", description: "Scan it with your phone to log in." });
+    } catch {
+      toast({ title: "Error", description: "Could not generate QR code.", variant: "destructive" });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  return (
+    <CardContent className="border-t pt-6">
+      {qrApiKey ? (
+        <QRCodeDisplay apiKey={qrApiKey} label="Mobile QR Login" />
+      ) : (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-medium">Mobile QR Login</h3>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Generate a QR code you can scan on your phone to log in without
+            entering your password. The code is shown only once.
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={generateQRKey}
+            disabled={isGenerating}
+          >
+            {isGenerating ? "Generating..." : "Generate QR Code"}
+          </Button>
+        </div>
+      )}
+    </CardContent>
+  );
+}
 
 export default function ProfileSettings() {
   const { toast } = useToast();
@@ -698,6 +754,9 @@ export default function ProfileSettings() {
           </Form>
         </div>
       </CardContent>
+
+      {/* QR Login Section */}
+      <QRLoginSection />
 
       {/* Color change confirmation dialog */}
       <AlertDialog

@@ -103,7 +103,7 @@ const warnings: string[] = [];
 if (warnings.length > 0) {
   console.log("Warnings:");
   for (const warning of warnings) {
-    console.log(`  ⚠️  ${warning}`);
+    console.log(`    ${warning}`);
   }
   console.log("");
 }

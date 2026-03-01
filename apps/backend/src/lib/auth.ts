@@ -74,6 +74,33 @@ try {
   // or set initializedAdapter to a state that 'betterAuth' can handle or will clearly show an error.
 }
 
+// --- Social / OAuth provider helpers ---
+// Google is only enabled when the corresponding env vars are set.
+// We build the socialProviders object dynamically so the app still boots
+// without any OAuth credentials configured.
+const socialProviders: Record<string, unknown> = {};
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  socialProviders.google = {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    // "offline" gets us a refresh token so we can call Google APIs later
+    accessType: "offline",
+    prompt: "consent",
+    // Request the scopes we need for Gmail, YouTube, Calendar, Drive
+    scope: [
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+    ],
+  };
+  logger.info({}, "Google OAuth provider enabled");
+}
+
+// Note: Last.fm uses API key auth (no OAuth), so no socialProvider entry needed.
+// Credentials are read directly from LASTFM_API_KEY / LASTFM_USERNAME env vars.
+
 export const auth = betterAuth({
   database: initializedAdapter, // Use the potentially try-catched adapter
   emailAndPassword: {
@@ -81,6 +108,8 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     autoSignIn: true,
   },
+  // Only add socialProviders when at least one is configured
+  ...(Object.keys(socialProviders).length > 0 ? { socialProviders } : {}),
   session: {
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,

@@ -245,11 +245,11 @@
 
   /* dark mode — Absolute black + pure white */
   .dark {
-    /* Keep brand consistent; choose a lighter on-dark text tint */
-    --brand: 257 85% 60%; /* #7141F0 */
+    /* Dark-mode brand: blue instead of purple for better contrast */
+    --brand: 217 91% 60%; /* #3B82F6 */
 
-    /* Lighter brand for on-dark text */
-    --brand-on-dark: 256 86% 70%; /* #9470F4 */
+    /* Lighter blue for on-dark text */
+    --brand-on-dark: 217 91% 70%; /* #60A5FA */
 
     /* Neutrals & surfaces (absolute black) */
     --background: 0 0% 0%; /* #000000 - absolute black */
@@ -259,8 +259,8 @@
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    /* Primary = deep brand surface for buttons/CTAs (still AAA with white) */
-    --primary: var(--brand-600); /* #6138CE */
+    /* Primary = deep blue for buttons/CTAs (AAA with white) */
+    --primary: 217 91% 45%; /* #2563EB */
     --primary-foreground: 0 0% 100%;
     --ring: 0 0% 50%; /* neutral gray ring */
 
@@ -284,22 +284,22 @@
     --border: 30 4% 21%; /* #373530 */
     --input: 0 0% 15%;
 
-    /* Charts – brand-first */
-    --chart-1: var(--brand-500); /* #7141F0 */
-    --chart-2: 257 85% 72%; /* #9C7AF4 */
-    --chart-3: 256 61% 51%; /* #6138CE */
+    /* Charts – blue in dark mode */
+    --chart-1: 217 91% 60%; /* #3B82F6 */
+    --chart-2: 217 91% 72%; /* #93C5FD */
+    --chart-3: 217 91% 45%; /* #2563EB */
     --chart-4: 330 70% 60%;
     --chart-5: 0 75% 55%;
 
     /* Sidebar (absolute black with pure white text) */
     --sidebar-background: 0 0% 5%; /* #0d0d0d - near black */
     --sidebar-foreground: 0 0% 100%; /* #ffffff - pure white */
-    --sidebar-primary: var(--brand-400);
+    --sidebar-primary: 217 91% 68%; /* #60A5FA */
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 12%; /* #1f1f1f */
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 12%;
-    --sidebar-ring: var(--brand-500);
+    --sidebar-ring: 217 91% 60%; /* #3B82F6 */
 
     /* Sidebar active state colors - Notion-style neutral (no purple) */
     --sidebar-active-bg: 0 0% 100%;

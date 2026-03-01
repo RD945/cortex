@@ -22,7 +22,7 @@ const iconSizeClasses = {
 export function AIAvatar({ size = "md", className }: AIAvatarProps) {
   return (
     <Avatar className={cn(sizeClasses[size], className)}>
-      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-700 text-white">
         <Bot className={iconSizeClasses[size]} />
       </AvatarFallback>
     </Avatar>

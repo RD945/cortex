@@ -804,9 +804,9 @@ export function TaskDetailClient() {
                           <div className="flex items-center gap-2">
                             <div className="flex items-center gap-1">
                               {comment.user.userType === "assistant" ? (
-                                <span className="text-sm">🤖</span>
+                                <span className="text-sm"></span>
                               ) : (
-                                <span className="text-sm">👤</span>
+                                <span className="text-sm"></span>
                               )}
                               <span className="font-medium text-sm">
                                 {comment.user.displayName || comment.user.id}
@@ -1036,7 +1036,7 @@ export function TaskDetailClient() {
                               .filter((u) => u.userType === "assistant")
                               .map((user) => (
                                 <SelectItem key={user.id} value={user.id}>
-                                  🤖 {user.displayName || user.email || user.id}
+                                   {user.displayName || user.email || user.id}
                                 </SelectItem>
                               ))}
                           </>
@@ -1054,7 +1054,7 @@ export function TaskDetailClient() {
                               .filter((u) => u.userType !== "assistant")
                               .map((user) => (
                                 <SelectItem key={user.id} value={user.id}>
-                                  👤 {user.displayName || user.email || user.id}
+                                   {user.displayName || user.email || user.id}
                                 </SelectItem>
                               ))}
                           </>
@@ -1074,7 +1074,7 @@ export function TaskDetailClient() {
                                 assignee.id
                               : task.assignedToId;
                             const icon =
-                              assignee?.userType === "assistant" ? "🤖" : "👤";
+                              assignee?.userType === "assistant" ? "" : "";
                             return `${icon} ${displayName}`;
                           })()
                         : "Unassigned"}

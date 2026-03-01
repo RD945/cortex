@@ -33,14 +33,14 @@ const loggedFetch = async (url: string, options: RequestInit = {}) => {
 
 describe("API Key Authentication Integration Tests", () => {
   beforeAll(async () => {
-    console.log("🧪 Starting API Key authentication integration tests...");
+    console.log(" Starting API Key authentication integration tests...");
 
     // Ensure we start with a clean state - no session cookies
     sessionCookies = null;
 
     // Sign out first to ensure no active session can interfere with API key tests
     console.log(
-      "🔄 Ensuring clean state by signing out any existing session...",
+      " Ensuring clean state by signing out any existing session...",
     );
     try {
       await loggedFetch(`${BASE_URL}/auth/sign-out`, {
@@ -54,7 +54,7 @@ describe("API Key Authentication Integration Tests", () => {
   });
 
   afterAll(async () => {
-    console.log("✅ API Key authentication integration tests completed");
+    console.log(" API Key authentication integration tests completed");
   });
 
   it("Should verify no active session exists before API key tests", async () => {
@@ -71,7 +71,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Confirmed no active session - ready for API key tests");
+    console.log(" Confirmed no active session - ready for API key tests");
   });
 
   it("GET /api/bookmarks - should access authenticated API with valid API key", async () => {
@@ -102,11 +102,11 @@ describe("API Key Authentication Integration Tests", () => {
       }
 
       console.log(
-        `✅ Successfully accessed API with valid API key - found ${data.length} bookmarks`,
+        ` Successfully accessed API with valid API key - found ${data.length} bookmarks`,
       );
     } else {
       console.log(
-        "✅ Successfully accessed API with valid API key - no bookmarks found",
+        " Successfully accessed API with valid API key - no bookmarks found",
       );
     }
   });
@@ -144,7 +144,7 @@ describe("API Key Authentication Integration Tests", () => {
     expect(data.processingStatus).toBeDefined();
     expect(["pending", "processing"]).toContain(data.processingStatus);
 
-    console.log("✅ Successfully created bookmark with valid API key");
+    console.log(" Successfully created bookmark with valid API key");
   });
 
   it("GET /api/bookmarks - should fail with empty Authorization header", async () => {
@@ -160,7 +160,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Correctly rejected empty Authorization header");
+    console.log(" Correctly rejected empty Authorization header");
   });
 
   it("GET /api/bookmarks - should fail with missing Authorization header", async () => {
@@ -174,7 +174,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Correctly rejected missing Authorization header");
+    console.log(" Correctly rejected missing Authorization header");
   });
 
   it("GET /api/bookmarks - should fail with invalid API key", async () => {
@@ -192,7 +192,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Correctly rejected invalid API key");
+    console.log(" Correctly rejected invalid API key");
   });
 
   it("GET /api/bookmarks - should fail with malformed Bearer token", async () => {
@@ -208,7 +208,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Correctly rejected malformed Bearer token");
+    console.log(" Correctly rejected malformed Bearer token");
   });
 
   it("POST /api/bookmarks - should fail to create bookmark with invalid API key", async () => {
@@ -233,7 +233,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as any;
     expect(data.error).toBeDefined();
 
-    console.log("✅ Correctly rejected bookmark creation with invalid API key");
+    console.log(" Correctly rejected bookmark creation with invalid API key");
   });
 
   it("Should verify API key works with X-API-Key header alternative", async () => {
@@ -249,7 +249,7 @@ describe("API Key Authentication Integration Tests", () => {
     const data = (await response.json()) as Bookmark[];
     expect(data).toBeInstanceOf(Array);
 
-    console.log("✅ Successfully accessed API with X-API-Key header format");
+    console.log(" Successfully accessed API with X-API-Key header format");
   });
 
   it("Should verify API key authentication doesn't create session cookies", async () => {
@@ -271,7 +271,7 @@ describe("API Key Authentication Integration Tests", () => {
     expect(sessionCookies).toBeNull();
 
     console.log(
-      "✅ Confirmed API key authentication doesn't create session cookies",
+      " Confirmed API key authentication doesn't create session cookies",
     );
   });
 
@@ -288,7 +288,7 @@ describe("API Key Authentication Integration Tests", () => {
     expect(data.error).toBeDefined();
 
     console.log(
-      "✅ Final verification: API key tests didn't create session side effects",
+      " Final verification: API key tests didn't create session side effects",
     );
   });
 });

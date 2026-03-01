@@ -12,6 +12,7 @@ import { useCallback, useState } from "react";
 import { ActivityTimelineChart } from "@/components/dashboard/ActivityTimelineChart";
 import { AssetOverviewCards } from "@/components/dashboard/AssetOverviewCards";
 import { DueItemsWidget } from "@/components/dashboard/DueItemsWidget";
+import { DashboardFeedCards } from "@/components/dashboard/feed";
 import { QuickStatsGrid } from "@/components/dashboard/QuickStatsGrid";
 import { StorageUsageChart } from "@/components/dashboard/StorageUsageChart";
 import { ProcessingSummaryDashboard } from "@/components/processing/ProcessingSummaryDashboard";
@@ -186,6 +187,9 @@ export function DashboardClientContent({
       <div>
         <h1 className="text-3xl font-bold">Welcome back, {userName}!</h1>
       </div>
+
+      {/* Live Feed Cards */}
+      <DashboardFeedCards />
 
       {/* Asset Overview Cards */}
       <AssetOverviewCards stats={stats} />

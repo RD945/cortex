@@ -22,8 +22,8 @@ const execAsync = promisify(exec);
  * Download a model from HuggingFace
  *
  * Supports two formats:
- * - repoId/filename: e.g., "unsloth/Qwen3-14B-GGUF/Qwen3-14B-Q4_K_XL.gguf"
- * - HuggingFace URL: e.g., "https://huggingface.co/unsloth/Qwen3-14B-GGUF/resolve/main/Qwen3-14B-Q4_K_XL.gguf"
+ * - repoId/filename: e.g., "unsloth/Qwen3-1.7B-GGUF/Qwen3-1.7B-Q4_K_XL.gguf"
+ * - HuggingFace URL: e.g., "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q4_K_XL.gguf"
  */
 export async function downloadModel(
   modelRef: string,

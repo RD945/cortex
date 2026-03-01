@@ -102,7 +102,7 @@ describe("Token Estimation", () => {
 
     it("handles special characters", () => {
       const messages: AIMessage[] = [
-        { role: "user", content: "Hello! 你好! مرحبا! 🌍" },
+        { role: "user", content: "Hello! 你好! مرحبا! " },
       ];
 
       const count = estimateTokenCount(messages, "gpt-4");

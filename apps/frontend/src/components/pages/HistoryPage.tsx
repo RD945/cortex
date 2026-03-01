@@ -227,7 +227,7 @@ export default function HistoryPage() {
         return (
           <Badge
             variant="outline"
-            className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+            className="bg-purple-100 text-purple-800 dark:bg-blue-900 dark:text-blue-300"
           >
             API Call
           </Badge>

@@ -25,16 +25,6 @@ export function StreamingMessage({
   const contentRef = useRef(content);
   const typewriterTimeoutRef = useRef<NodeJS.Timeout>(undefined);
 
-  // Debug logging for content updates
-  console.log("💬 StreamingMessage render:", {
-    contentLength: content.length,
-    contentPreview: content.substring(0, 50),
-    displayedContentLength: displayedContent.length,
-    isComplete,
-    enableTypewriter,
-    showCursor,
-  });
-
   // Update content reference
   useEffect(() => {
     contentRef.current = content;

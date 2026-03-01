@@ -4,6 +4,10 @@ import type { MobileTab } from "@/components/mobile/mobile-tab-bar";
  * Get the appropriate mobile tab based on the current pathname
  */
 export function getMobileTabFromPathname(pathname: string): MobileTab {
+  if (pathname === "/dashboard" || pathname === "/") {
+    return "home";
+  }
+
   if (pathname === "/settings") {
     return "settings";
   }
@@ -24,7 +28,7 @@ export function getMobileTabFromPathname(pathname: string): MobileTab {
     return "folders";
   }
 
-  // Default to chat for any other paths (including dashboard)
+  // Default to chat for any other paths
   return "chat";
 }
 
@@ -54,6 +58,8 @@ export function shouldShowFolders(
  */
 export function getRouteForMobileTab(tab: MobileTab): string | null {
   switch (tab) {
+    case "home":
+      return "/dashboard";
     case "settings":
       return "/settings";
     case "chat":

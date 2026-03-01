@@ -152,7 +152,7 @@ describe("BullMQ: Job Context", () => {
 
       worker = harness.createWorker("test-queue", async (ctx) => {
         ctx.log("Message with special chars: \n\t\"quotes\" and 'apostrophes'");
-        ctx.log("Unicode: 你好世界 🎉");
+        ctx.log("Unicode: 你好世界 ");
         ctx.log('JSON: {"key": "value"}');
         completed.resolve();
       });

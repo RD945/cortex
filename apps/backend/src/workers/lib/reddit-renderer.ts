@@ -596,7 +596,7 @@ function generateHTML(
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+  <button class="theme-toggle" onclick="toggleTheme()"> Toggle Theme</button>
   
   <div class="container">
     ${subredditHeader}

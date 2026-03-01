@@ -240,7 +240,7 @@ async function executeAIWorkflowStep(
       {
         role: "system",
         content:
-          "You are an expert Optical Character Recognition (OCR) engine. Your task is to extract all text from an image. You must respond with a single, valid JSON object that strictly adheres to the provided schema. Do not include any other text, explanations, or markdown formatting in your response.",
+          "You are Cortex, an expert Optical Character Recognition (OCR) engine. Your task is to extract all text from an image. You must respond with a single, valid JSON object that strictly adheres to the provided schema. Do not include any other text, explanations, or markdown formatting in your response.",
       },
       {
         role: "user",
@@ -274,7 +274,7 @@ async function executeAIWorkflowStep(
     {
       role: "system",
       content:
-        "You are an expert image analysis AI. Analyze the provided image and return ONLY valid JSON. Do not include explanatory text before or after the JSON.",
+        "You are Cortex, an expert image analysis AI. Analyze the provided image and return ONLY valid JSON. Do not include explanatory text before or after the JSON.",
     },
     {
       role: "user",

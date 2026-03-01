@@ -27,7 +27,7 @@ export const logger = {
     body?: any,
   ) => {
     if (!VERBOSE) return;
-    console.log("\n📤 REQUEST:");
+    console.log("\n REQUEST:");
     console.log(`${method} ${url}`);
     console.log("Headers:", JSON.stringify(headers, null, 2));
     if (body) {
@@ -37,7 +37,7 @@ export const logger = {
   response: async (response: Response) => {
     if (!VERBOSE) return;
 
-    console.log("\n📥 RESPONSE:");
+    console.log("\n RESPONSE:");
     console.log(`Status: ${response.status} (${response.statusText})`);
     console.log(
       "Headers:",

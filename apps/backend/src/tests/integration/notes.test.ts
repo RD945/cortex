@@ -93,7 +93,7 @@ describe("Notes API Integration Tests", () => {
     createdNoteId = data.id;
     expect(createdNoteId).not.toBeNull();
 
-    console.log(`✅ Note created successfully with ID: ${createdNoteId}`);
+    console.log(` Note created successfully with ID: ${createdNoteId}`);
   });
 
   it("GET /api/notes/:id - should retrieve the created note entry", async () => {

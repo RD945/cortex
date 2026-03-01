@@ -723,7 +723,7 @@ describe("Channels Integration Tests", { timeout: 30000 }, () => {
 
     it("Should handle special characters in channel names", async () => {
       const specialCharTests = [
-        "Channel with émojis 🚀",
+        "Channel with émojis ",
         "Channel-with-dashes_and_underscores.and.dots",
         "Channel (with parentheses) & symbols!",
         "Channel with \"quotes\" and 'apostrophes'",

@@ -1,8 +1,10 @@
 ﻿import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useSearch } from "@tanstack/react-router";
+import { QrCode } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { QRScanner } from "@/components/auth/qr-scanner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/ui/logo";
 import { useToast } from "@/hooks/use-toast";
 import { signIn } from "@/lib/auth";
+import { apiFetch } from "@/lib/frontend-api";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -31,6 +34,8 @@ export default function LoginPage() {
   const { callbackUrl } = useSearch({ from: "/auth/login" });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showQRScanner, setShowQRScanner] = useState(false);
+  const [isQRLoading, setIsQRLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,10 +84,45 @@ export default function LoginPage() {
     }
   }
 
+  async function handleQRScan(apiKey: string) {
+    setShowQRScanner(false);
+    setIsQRLoading(true);
+    setError(null);
+
+    try {
+      const res = await apiFetch("/api/auth/qr-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ apiKey }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "QR login failed. Please try again.");
+        toast({
+          title: "QR login failed",
+          description: data.error || "Invalid QR code.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Login successful!",
+        description: "Signed in via QR code.",
+      });
+      window.location.href = callbackUrl;
+    } catch {
+      setError("QR login failed. Please try again.");
+    } finally {
+      setIsQRLoading(false);
+    }
+  }
+
   return (
     <div className="container relative flex min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-        <div className="absolute inset-0 bg-[#7141F0]" />
+        <div className="absolute inset-0 bg-primary" />
         <div className="relative z-20 flex items-center">
           <Logo variant="auth" />
         </div>
@@ -132,11 +172,39 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading || isQRLoading}>
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
           </Form>
+
+          {/* QR Login - shown on all devices */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or
+              </span>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => setShowQRScanner(true)}
+            disabled={isLoading || isQRLoading}
+          >
+            {isQRLoading ? (
+              "Signing in..."
+            ) : (
+              <>
+                <QrCode className="h-4 w-4 mr-2" />
+                Scan QR Code
+              </>
+            )}
+          </Button>
+
           <div className="text-center text-sm">
             Don't have an account?{" "}
             <Link to="/auth/register" className="text-primary hover:underline">
@@ -145,6 +213,13 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      {/* QR Scanner overlay */}
+      <QRScanner
+        open={showQRScanner}
+        onScan={handleQRScan}
+        onClose={() => setShowQRScanner(false)}
+      />
     </div>
   );
 }

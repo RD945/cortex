@@ -24,7 +24,7 @@ function question(query) {
 }
 
 async function clean() {
-  console.log(`${colors.yellow}⚠️  WARNING: This will delete all generated configuration files${colors.reset}`);
+  console.log(`${colors.yellow}  WARNING: This will delete all generated configuration files${colors.reset}`);
   console.log('\nThe following files will be deleted:');
   console.log('  - .env');
   console.log('  - config/ai/models.json');
@@ -55,10 +55,10 @@ async function clean() {
     if (fs.existsSync(filePath)) {
       try {
         fs.unlinkSync(filePath);
-        console.log(`  ${colors.green}✓${colors.reset} Deleted: ${file}`);
+        console.log(`  ${colors.green}${colors.reset} Deleted: ${file}`);
         deletedCount++;
       } catch (error) {
-        console.log(`  ${colors.red}✗${colors.reset} Failed to delete ${file}: ${error.message}`);
+        console.log(`  ${colors.red}${colors.reset} Failed to delete ${file}: ${error.message}`);
       }
     } else {
       console.log(`  ${colors.cyan}-${colors.reset} Not found: ${file}`);

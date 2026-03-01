@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Bookmark,
   CheckSquare,
   ExternalLink,
   FileText,
+  ImageIcon,
   Monitor,
   StickyNote,
 } from "lucide-react";
@@ -15,6 +17,8 @@ interface ContentLinkPreviewProps {
 }
 
 export const ContentLinkPreview = ({ link }: ContentLinkPreviewProps) => {
+  const [thumbnailError, setThumbnailError] = useState(false);
+
   const getIcon = () => {
     switch (link.type) {
       case "bookmark":
@@ -45,10 +49,9 @@ export const ContentLinkPreview = ({ link }: ContentLinkPreviewProps) => {
         return {
           title: link.title || "Untitled Bookmark",
           subtitle: originalUrl ? new URL(originalUrl).hostname : undefined,
-          showFavicon: !!meta("faviconStorageId"),
-          faviconUrl: meta("faviconStorageId")
-            ? `/api/storage/${meta("faviconStorageId")}`
-            : undefined,
+          showFavicon: !!meta("faviconUrl"),
+          faviconUrl: meta("faviconUrl") || undefined,
+          thumbnailUrl: meta("thumbnailUrl") || undefined,
         };
       }
 
@@ -56,12 +59,14 @@ export const ContentLinkPreview = ({ link }: ContentLinkPreviewProps) => {
         return {
           title: link.title || "Untitled Document",
           subtitle: meta("originalFilename"),
+          thumbnailUrl: meta("thumbnailUrl") || undefined,
         };
 
       case "photo":
         return {
           title: link.title || "Untitled Photo",
           subtitle: meta("originalFilename"),
+          thumbnailUrl: meta("thumbnailUrl") || undefined,
         };
 
       case "task": {
@@ -95,44 +100,66 @@ export const ContentLinkPreview = ({ link }: ContentLinkPreviewProps) => {
     }
   };
 
-  const { title, subtitle, showFavicon, faviconUrl } = getDisplayContent();
+  const { title, subtitle, showFavicon, faviconUrl, thumbnailUrl } =
+    getDisplayContent();
+  const showThumbnail = !!thumbnailUrl && !thumbnailError;
 
   return (
     <Button
       variant="outline"
-      className="mt-1.5 w-full justify-start h-auto p-2.5 text-left"
+      className="mt-1.5 w-full justify-start h-auto p-0 text-left overflow-hidden"
       asChild
     >
       <Link to={link.url}>
-        <div className="flex items-center gap-2.5 w-full min-w-0">
-          <div className="flex-shrink-0 flex items-center">
-            {showFavicon && faviconUrl ? (
+        <div className="flex flex-col w-full">
+          {/* Thumbnail image preview */}
+          {showThumbnail && (
+            <div className="w-full aspect-video overflow-hidden bg-muted">
               <img
-                src={faviconUrl}
-                alt="Favicon"
-                className="h-4 w-4"
-                onError={(e) => {
-                  // Fallback to type icon if favicon fails to load
-                  e.currentTarget.style.display = "none";
-                  e.currentTarget.nextElementSibling?.classList.remove(
-                    "hidden",
-                  );
-                }}
+                src={thumbnailUrl}
+                alt={title}
+                className="w-full h-full object-cover"
+                onError={() => setThumbnailError(true)}
               />
-            ) : null}
-            <div className={showFavicon && faviconUrl ? "hidden" : ""}>
-              {getIcon()}
             </div>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate">{title}</div>
-            {subtitle && (
-              <div className="text-xs text-muted-foreground truncate">
-                {subtitle}
+          )}
+          {/* Fallback placeholder when no thumbnail */}
+          {!showThumbnail &&
+            (link.type === "bookmark" || link.type === "document") && (
+              <div className="w-full aspect-video overflow-hidden bg-muted flex items-center justify-center">
+                <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
               </div>
             )}
+          {/* Title bar with favicon/icon */}
+          <div className="flex items-center gap-2.5 w-full min-w-0 p-2.5">
+            <div className="shrink-0 flex items-center">
+              {showFavicon && faviconUrl ? (
+                <img
+                  src={faviconUrl}
+                  alt="Favicon"
+                  className="h-4 w-4"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.nextElementSibling?.classList.remove(
+                      "hidden",
+                    );
+                  }}
+                />
+              ) : null}
+              <div className={showFavicon && faviconUrl ? "hidden" : ""}>
+                {getIcon()}
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium truncate">{title}</div>
+              {subtitle && (
+                <div className="text-xs text-muted-foreground truncate">
+                  {subtitle}
+                </div>
+              )}
+            </div>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
           </div>
-          <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
         </div>
       </Link>
     </Button>

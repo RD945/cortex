@@ -203,7 +203,7 @@ export async function processDocumentJob(ctx: JobContext<DocumentJobData>) {
   try {
     // 1. Determine the processing plan
     const isHtml = mimeType === "text/html";
-    const useDocling = shouldProcessWithDocling(mimeType);
+    const useDocling = await shouldProcessWithDocling(mimeType);
     const needsPdf = mimeType !== "application/pdf";
 
     const stages = ["preparation"];
@@ -609,7 +609,34 @@ export async function processDocumentJob(ctx: JobContext<DocumentJobData>) {
 
 // --- Classification Helpers ---
 
-function shouldProcessWithDocling(mimeType: string): boolean {
+// Cached Docling health check — avoids hitting the server on every job
+let _doclingHealthy: boolean | null = null;
+let _doclingHealthCheckedAt = 0;
+const DOCLING_HEALTH_TTL = 60_000; // re-check every 60s
+
+async function isDoclingAvailable(): Promise<boolean> {
+  const now = Date.now();
+  if (_doclingHealthy !== null && now - _doclingHealthCheckedAt < DOCLING_HEALTH_TTL) {
+    return _doclingHealthy;
+  }
+
+  try {
+    const res = await fetch(`${DOCLING_SERVER_URL}/health`, {
+      signal: AbortSignal.timeout(3_000),
+    });
+    _doclingHealthy = res.ok;
+  } catch {
+    _doclingHealthy = false;
+  }
+  _doclingHealthCheckedAt = now;
+
+  if (!_doclingHealthy) {
+    logger.info("Docling server not reachable — will use fallback extractors");
+  }
+  return _doclingHealthy;
+}
+
+function isDoclingMimeType(mimeType: string): boolean {
   const doclingSupportedTypes = new Set([
     "application/pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
@@ -622,6 +649,11 @@ function shouldProcessWithDocling(mimeType: string): boolean {
     "image/webp",
   ]);
   return doclingSupportedTypes.has(mimeType);
+}
+
+async function shouldProcessWithDocling(mimeType: string): Promise<boolean> {
+  if (!isDoclingMimeType(mimeType)) return false;
+  return isDoclingAvailable();
 }
 
 function getFileExtensionFromMimeType(mimeType: string): string {
@@ -1057,7 +1089,7 @@ async function generateDocumentMetadata(
     {
       role: "system",
       content:
-        "You are an assistant that analyzes documents and generates metadata in JSON format.",
+        "You are Cortex, an assistant that analyzes documents and generates metadata in JSON format.",
     },
     { role: "user", content: prompt },
   ];
@@ -1286,7 +1318,7 @@ async function generatePdfScreenshot(pdfPath: string): Promise<Buffer> {
 }
 
 async function generatePlaceholderThumbnail(): Promise<Buffer> {
-  const htmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;width:800px;height:600px;background:#f0f2f5;display:flex;justify-content:center;align-items:center;font-family:sans-serif;color:#a0aec0;}.icon{font-size:120px;}</style></head><body><div class="icon">📄</div></body></html>`;
+  const htmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;width:800px;height:600px;background:#f0f2f5;display:flex;justify-content:center;align-items:center;font-family:sans-serif;color:#a0aec0;}.icon{font-size:120px;}</style></head><body><div class="icon"></div></body></html>`;
   const browser = await chromium.launch();
   const page = await browser.newPage();
   try {
@@ -1300,7 +1332,7 @@ async function generatePlaceholderThumbnail(): Promise<Buffer> {
 }
 
 async function generatePlaceholderScreenshot(): Promise<Buffer> {
-  const htmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;width:1920px;height:1440px;background:#f0f2f5;display:flex;justify-content:center;align-items:center;font-family:sans-serif;color:#a0aec0;}.icon{font-size:320px;}</style></head><body><div class="icon">📄</div></body></html>`;
+  const htmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;width:1920px;height:1440px;background:#f0f2f5;display:flex;justify-content:center;align-items:center;font-family:sans-serif;color:#a0aec0;}.icon{font-size:320px;}</style></head><body><div class="icon"></div></body></html>`;
   const browser = await chromium.launch();
   const page = await browser.newPage();
   try {

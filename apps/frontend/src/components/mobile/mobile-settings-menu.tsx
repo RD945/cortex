@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Info,
   Key,
+  Plug,
   Settings,
   User,
 } from "lucide-react";
@@ -49,6 +50,13 @@ const settingsMenuItems: SettingsMenuItem[] = [
     description: "AI assistant settings and behavior",
     icon: Bot,
     href: "/settings?tab=assistant",
+  },
+  {
+    id: "connections",
+    label: "Connections",
+    description: "Connect Spotify, Google, and more",
+    icon: Plug,
+    href: "/settings?tab=connections",
   },
   {
     id: "api-keys",

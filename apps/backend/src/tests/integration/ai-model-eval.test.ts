@@ -98,12 +98,12 @@ describe("Model Evaluation Integration Tests", () => {
     const results: ModelEvalResult[] = [];
 
     console.log(
-      `\n🔬 Evaluating ${MODEL_CONFIGS.length} models with prompt: "${prompt}"`,
+      `\n Evaluating ${MODEL_CONFIGS.length} models with prompt: "${prompt}"`,
     );
     console.log(`=${"=".repeat(60)}`);
 
     for (const modelConfig of MODEL_CONFIGS) {
-      console.log(`\n🧪 Testing: ${modelConfig.name}`);
+      console.log(`\n Testing: ${modelConfig.name}`);
 
       try {
         await delay(500); // Small delay between requests to avoid overwhelming
@@ -144,7 +144,7 @@ describe("Model Evaluation Integration Tests", () => {
 
           results.push(result);
           console.log(
-            `✅ Success: ${result.totalTimeMs}ms total, ${result.aiResponseTimeMs}ms AI`,
+            ` Success: ${result.totalTimeMs}ms total, ${result.aiResponseTimeMs}ms AI`,
           );
         } else {
           const errorText = await response.text();
@@ -162,7 +162,7 @@ describe("Model Evaluation Integration Tests", () => {
           };
 
           results.push(result);
-          console.log(`❌ Failed: ${result.error}`);
+          console.log(` Failed: ${result.error}`);
         }
       } catch (error) {
         const result: ModelEvalResult = {
@@ -179,12 +179,12 @@ describe("Model Evaluation Integration Tests", () => {
         };
 
         results.push(result);
-        console.log(`💥 Exception: ${result.error}`);
+        console.log(` Exception: ${result.error}`);
       }
     }
 
     // Display results in a nice table format
-    console.log("\n📊 PERFORMANCE COMPARISON RESULTS");
+    console.log("\n PERFORMANCE COMPARISON RESULTS");
     console.log(`=${"=".repeat(80)}`);
 
     // Prepare data for console.table with key metrics
@@ -192,7 +192,7 @@ describe("Model Evaluation Integration Tests", () => {
       "#": index + 1,
       Model: result.modelName,
       Provider: result.provider,
-      Success: result.success ? "✅" : "❌",
+      Success: result.success ? "" : "",
       "Total Time (ms)": result.success ? result.totalTimeMs : "N/A",
       "AI Time (ms)": result.success ? result.aiResponseTimeMs : "N/A",
       "AI Calls": result.success ? result.aiCallsCount : "N/A",
@@ -207,7 +207,7 @@ describe("Model Evaluation Integration Tests", () => {
     // Additional analysis
     const successfulResults = results.filter((r) => r.success);
     if (successfulResults.length > 0) {
-      console.log("\n📈 SUMMARY STATISTICS");
+      console.log("\n SUMMARY STATISTICS");
       console.log("-".repeat(40));
 
       const avgTotalTime =
@@ -237,7 +237,7 @@ describe("Model Evaluation Integration Tests", () => {
     }
 
     // Also display actual responses for comparison
-    console.log("\n💬 RESPONSE COMPARISON");
+    console.log("\n RESPONSE COMPARISON");
     console.log("-".repeat(50));
     successfulResults.forEach((result, index) => {
       console.log(`\n${index + 1}. ${result.modelName} (${result.provider})`);

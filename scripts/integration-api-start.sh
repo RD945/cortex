@@ -21,9 +21,9 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 info() { echo -e "${CYAN}→${NC} $1"; }
-success() { echo -e "${GREEN}✓${NC} $1"; }
+success() { echo -e "${GREEN}${NC} $1"; }
 warn() { echo -e "${YELLOW}!${NC} $1"; }
-error() { echo -e "${RED}✗${NC} $1"; exit 1; }
+error() { echo -e "${RED}${NC} $1"; exit 1; }
 
 # Check prerequisites
 check_prerequisites() {

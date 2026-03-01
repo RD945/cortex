@@ -112,7 +112,7 @@ async function setup() {
         try {
           results.dependencies = await checkDependencies();
         } catch (error) {
-          console.log(`  ${colors.red}❌ Dependency check failed: ${error.message}${colors.reset}`);
+          console.log(`  ${colors.red} Dependency check failed: ${error.message}${colors.reset}`);
           results.dependenciesFailed = true;
         }
       } else {
@@ -126,7 +126,7 @@ async function setup() {
       try {
         results.envFiles = await copyEnvFiles(flags.force);
       } catch (error) {
-        console.log(`  ${colors.red}❌ Environment file setup failed: ${error.message}${colors.reset}`);
+        console.log(`  ${colors.red} Environment file setup failed: ${error.message}${colors.reset}`);
         results.envFilesFailed = true;
       }
     } else {
@@ -140,7 +140,7 @@ async function setup() {
         results.databaseType = await chooseDatabaseType();
         await configureDatabaseInEnv(results.databaseType, question);
       } catch (error) {
-        console.log(`  ${colors.red}❌ Database configuration failed: ${error.message}${colors.reset}`);
+        console.log(`  ${colors.red} Database configuration failed: ${error.message}${colors.reset}`);
         results.databaseType = 'sqlite'; // Default to SQLite on error
       }
     } else {
@@ -153,7 +153,7 @@ async function setup() {
       try {
         results.directories = await createDataDirectories();
       } catch (error) {
-        console.log(`  ${colors.red}❌ Directory creation failed: ${error.message}${colors.reset}`);
+        console.log(`  ${colors.red} Directory creation failed: ${error.message}${colors.reset}`);
         results.directoriesFailed = true;
       }
     } else {
@@ -167,7 +167,7 @@ async function setup() {
         try {
           results.models = await checkModels();
         } catch (error) {
-          console.log(`  ${colors.red}❌ Model check failed: ${error.message}${colors.reset}`);
+          console.log(`  ${colors.red} Model check failed: ${error.message}${colors.reset}`);
           results.modelsFailed = true;
         }
       } else {
@@ -185,7 +185,7 @@ async function setup() {
             results.npmDependenciesFailed = true;
           }
         } catch (error) {
-          console.log(`  ${colors.red}❌ NPM dependencies installation failed: ${error.message}${colors.reset}`);
+          console.log(`  ${colors.red} NPM dependencies installation failed: ${error.message}${colors.reset}`);
           results.npmDependenciesFailed = true;
         }
       } else {
@@ -204,7 +204,7 @@ async function setup() {
             results.databaseFailed = true;
           }
         } catch (error) {
-          console.log(`  ${colors.red}❌ Database initialization failed: ${error.message}${colors.reset}`);
+          console.log(`  ${colors.red} Database initialization failed: ${error.message}${colors.reset}`);
           results.databaseFailed = true;
         }
       } else {
@@ -224,7 +224,7 @@ async function setup() {
             results.demoSeedFailed = true;
           }
         } catch (error) {
-          console.log(`  ${colors.red}❌ Demo seeding failed: ${error.message}${colors.reset}`);
+          console.log(`  ${colors.red} Demo seeding failed: ${error.message}${colors.reset}`);
           results.demoSeedFailed = true;
         }
       } else {

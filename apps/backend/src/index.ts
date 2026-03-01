@@ -62,6 +62,9 @@ import { promptRoutes } from "./routes/prompt.js";
 import { tasksRoutes } from "./routes/tasks.js";
 import { userRoutes } from "./routes/user.js";
 import { adminRoutes } from "./routes/admin.js";
+import { connectionsRoutes } from "./routes/connections.js";
+import { dashboardFeedRoutes } from "./routes/dashboard-feed.js";
+import { qrAuthRoutes } from "./routes/qr-auth.js";
 
 // Define the context type for Better Auth session and user
 type Variables = {
@@ -125,7 +128,7 @@ app.use("*", async (c, next) => {
           ),
         },
       },
-      "🔍 CORS preflight request",
+      " CORS preflight request",
     );
   }
 
@@ -150,7 +153,7 @@ app.use("*", async (c, next) => {
           ),
         },
       },
-      "📤 CORS preflight response",
+      " CORS preflight response",
     );
   }
 });
@@ -240,6 +243,9 @@ async function recordAuthenticationEvent(
   }
 }
 
+// QR code login - must be before Better Auth handler so it's not caught by the wildcard
+app.route("/api/auth", qrAuthRoutes);
+
 // Better Auth handler - handles all auth routes
 app.all("/api/auth/*", async (c) => {
   const requestURL = new URL(c.req.url);
@@ -255,7 +261,7 @@ app.all("/api/auth/*", async (c) => {
       origin: c.req.header("origin"),
       referer: c.req.header("referer"),
     },
-    "🔍 Auth request received",
+    " Auth request received",
   );
 
   logger.debug(
@@ -363,6 +369,8 @@ app.route("/api/model", modelRoutes);
 app.route("/api/prompt", promptRoutes);
 app.route("/api/processing-status", processingStatusRoutes);
 app.route("/api/processing-events", processingEventsRoutes);
+app.route("/api/connections", connectionsRoutes);
+app.route("/api/dashboard", dashboardFeedRoutes);
 
 // SPA middleware - serves frontend static files and falls back to index.html
 // Must be registered AFTER all API routes

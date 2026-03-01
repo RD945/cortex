@@ -848,3 +848,21 @@ export const appMeta = sqliteTable("_app_meta", {
     .notNull()
     .default(sql`(unixepoch())`),
 });
+
+// =============================================================================
+// Dashboard Feed Cache (for fast dashboard loads)
+// =============================================================================
+
+export const dashboardCache = sqliteTable("dashboard_cache", {
+  /** Feed type: finance, news, music, youtube */
+  feedType: text("feed_type").primaryKey(),
+  /** JSON serialized feed data */
+  data: text("data").notNull(),
+  /** When this cache entry was last updated */
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .notNull()
+    .default(sql`(cast((unixepoch('subsec') * 1000) as integer))`),
+  /** Cache TTL - when this entry expires */
+  expiresAt: integer("expires_at", { mode: "timestamp_ms" })
+    .notNull(),
+});

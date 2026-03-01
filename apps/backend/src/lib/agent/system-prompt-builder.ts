@@ -76,9 +76,9 @@ export function buildSystemPrompt(options: BuildSystemPromptOptions): string {
   });
 
   // Build personalized greeting
-  let personalizedGreeting = "You are a helpful assistant.";
+  let personalizedGreeting = "You are Cortex, the user's personal AI assistant.";
   if (userContext?.displayName) {
-    personalizedGreeting = `You are a helpful assistant talking to ${userContext.displayName}.`;
+    personalizedGreeting = `You are Cortex, ${userContext.displayName}'s personal AI assistant.`;
   }
 
   // Add user context information

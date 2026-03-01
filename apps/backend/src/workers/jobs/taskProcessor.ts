@@ -28,7 +28,7 @@ async function generateTaskTags(
     {
       role: "system",
       content:
-        "You are an expert project manager that analyzes tasks and generates relevant tags (e.g., 'marketing', 'bug-fix', 'research', 'design-review'). Always respond with a JSON array of strings containing 2-4 relevant tags.",
+        "You are Cortex, an expert project manager that analyzes tasks and generates relevant tags (e.g., 'marketing', 'bug-fix', 'research', 'design-review'). Always respond with a JSON array of strings containing 2-4 relevant tags.",
     },
     {
       role: "user",
